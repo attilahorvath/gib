@@ -1,2 +1,2 @@
-# systems-offline
+# Systems Offline
 A tiny Metroidvania.
