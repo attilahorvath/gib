@@ -26,7 +26,7 @@ export default class {
     this.vertexTexCoord = gl.getAttribLocation(this.program, 'vertexTexCoord');
   }
 
-  use(projection, view) {
+  use(projection, view, model) {
     this.gl.useProgram(this.program);
 
     this.gl.enableVertexAttribArray(this.vertexPosition);
@@ -39,5 +39,6 @@ export default class {
 
     this.gl.uniformMatrix4fv(this.projection, false, projection);
     this.gl.uniformMatrix4fv(this.view, false, view);
+    this.gl.uniformMatrix4fv(this.model, false, model);
   }
 }
