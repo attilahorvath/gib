@@ -1,9 +1,45 @@
-import vertexShaderSource from '../shaders/texture.vert';
-import fragmentShaderSource from '../shaders/texture.frag';
+function components(type) {
+  switch (type) {
+  case 'float':
+    return 1;
+  case 'vec2':
+    return 2;
+  case 'vec3':
+    return 3;
+  case 'vec4':
+    return 4;
+  case 'mat3':
+    return 9;
+  case 'mat4':
+    return 16;
+  }
+}
+
+function parseShader(combinedShaders, pattern) {
+  let matchResult;
+  const result = [];
+
+  while ((matchResult = pattern.exec(combinedShaders)) !== null) {
+    result.push(
+      { type: matchResult[2], name: matchResult[3],
+        components: components(matchResult[2]) }
+    );
+  }
+
+  return result;
+}
 
 export default class {
-  constructor(gl) {
+  constructor(gl, vertexShaderSource, fragmentShaderSource) {
     this.gl = gl;
+
+    const combinedShaders = `${vertexShaderSource}\n${fragmentShaderSource}`;
+
+    this.uniforms = parseShader(combinedShaders,
+                                /uniform\s+(\w+\s+)*(\w+)\s+(\w+)\s*;/g);
+
+    this.attributes = parseShader(combinedShaders,
+                                  /attribute\s+(\w+\s+)*(\w+)\s+(\w+)\s*;/g);
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexShaderSource);
@@ -18,27 +54,43 @@ export default class {
     gl.attachShader(this.program, fragmentShader);
     gl.linkProgram(this.program);
 
-    this.projection = gl.getUniformLocation(this.program, 'projection');
-    this.view = gl.getUniformLocation(this.program, 'view');
-    this.model = gl.getUniformLocation(this.program, 'model');
+    for (const uniform of this.uniforms) {
+      this[uniform.name] = null;
 
-    this.vertexPosition = gl.getAttribLocation(this.program, 'vertexPosition');
-    this.vertexTexCoord = gl.getAttribLocation(this.program, 'vertexTexCoord');
+      uniform.location = gl.getUniformLocation(this.program, uniform.name);
+    }
+
+    this.stride = 0;
+
+    for (const attribute of this.attributes) {
+      attribute.location = gl.getAttribLocation(this.program, attribute.name);
+
+      this.stride += attribute.components * 4;
+    }
   }
 
-  use(projection, view, model) {
+  use() {
     this.gl.useProgram(this.program);
 
-    this.gl.enableVertexAttribArray(this.vertexPosition);
-    this.gl.enableVertexAttribArray(this.vertexTexCoord);
+    let offset = 0;
 
-    this.gl.vertexAttribPointer(this.vertexPosition, 2, this.gl.FLOAT, false,
-                                16, 0);
-    this.gl.vertexAttribPointer(this.vertexTexCoord, 2, this.gl.FLOAT, false,
-                                16, 8);
+    for (const attribute of this.attributes) {
+      this.gl.enableVertexAttribArray(attribute.location);
+      this.gl.vertexAttribPointer(attribute.location, attribute.components,
+                                  this.gl.FLOAT, false, this.stride, offset);
 
-    this.gl.uniformMatrix4fv(this.projection, false, projection);
-    this.gl.uniformMatrix4fv(this.view, false, view);
-    this.gl.uniformMatrix4fv(this.model, false, model);
+      offset += attribute.components * 4;
+    }
+
+    for (const uniform of this.uniforms) {
+      switch (uniform.type) {
+      case 'mat2':
+        this.gl.uniformMatrix2fv(uniform.location, false, this[uniform.name]);
+        break;
+      case 'mat4':
+        this.gl.uniformMatrix4fv(uniform.location, false, this[uniform.name]);
+        break;
+      }
+    }
   }
 }

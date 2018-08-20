@@ -1,12 +1,12 @@
 import map from '../assets/map.txt';
-
-const TILE_SIZE = 64.0;
-const TEXTURE_TILE_SIZE = 16.0;
-const TEXTURE_WIDTH = 64.0;
+import Sprite from './Sprite';
+import Gib from './Gib';
 
 export default class {
-  constructor(renderer) {
+  constructor(renderer, entities) {
     this.renderer = renderer;
+
+    this.tiles = [];
 
     const rows = map.split('\n');
 
@@ -16,14 +16,18 @@ export default class {
     let i = 0;
 
     for (let y = 0; y < rows.length; y++) {
+      this.tiles.push([]);
+
       for (let x = 0; x < rows[y].length; x++) {
         const type = rows[y][x];
 
-        if (type == ' ') {
+        if (type === ' ') {
+          this.tiles[y].push(false);
           continue;
         }
 
-        let u = 0;
+        let u = null;
+        let v = 0;
 
         switch (type) {
         case '1':
@@ -32,20 +36,35 @@ export default class {
         case '2':
           u = 1;
           break;
+        case 'D':
+          entities.push(new Sprite(renderer, this, renderer.SPRITE_SIZE * x,
+            renderer.SPRITE_SIZE * y, 0.9, 0, 1));
+          break;
+        case 'G':
+          entities.push(new Gib(renderer, this, renderer.SPRITE_SIZE * x,
+                                renderer.SPRITE_SIZE * y));
+          break;
         }
 
+        if (u === null) {
+          this.tiles[y].push(false);
+          continue;
+        }
+
+        this.tiles[y].push(true);
+
         vertexData.push(
-          TILE_SIZE * x, TILE_SIZE * y,
-          (TEXTURE_TILE_SIZE * u) / TEXTURE_WIDTH, 0,
+          renderer.SPRITE_SIZE * x, renderer.SPRITE_SIZE * y,
+          renderer.tileTextureU(u), renderer.tileTextureV(v),
 
-          TILE_SIZE * x, TILE_SIZE * y + TILE_SIZE,
-          (TEXTURE_TILE_SIZE * u) / TEXTURE_WIDTH, 1,
+          renderer.SPRITE_SIZE * x, renderer.SPRITE_SIZE * (y + 1),
+          renderer.tileTextureU(u), renderer.tileTextureV(v + 1),
 
-          TILE_SIZE * x + TILE_SIZE, TILE_SIZE * y,
-          (TEXTURE_TILE_SIZE * u + TEXTURE_TILE_SIZE) / TEXTURE_WIDTH, 0,
+          renderer.SPRITE_SIZE * (x + 1), renderer.SPRITE_SIZE * y,
+          renderer.tileTextureU(u + 1), renderer.tileTextureV(v),
 
-          TILE_SIZE * x + TILE_SIZE, TILE_SIZE * y + TILE_SIZE,
-          (TEXTURE_TILE_SIZE * u + TEXTURE_TILE_SIZE) / TEXTURE_WIDTH, 1
+          renderer.SPRITE_SIZE * (x + 1), renderer.SPRITE_SIZE * (y + 1),
+          renderer.tileTextureU(u + 1), renderer.tileTextureV(v + 1),
         );
 
         indexData.push(
@@ -78,8 +97,19 @@ export default class {
     ]);
   }
 
+  isBlocked(x, y) {
+    const row = this.tiles[Math.floor(y / this.renderer.SPRITE_SIZE)];
+
+    if (!row) {
+      return false;
+    }
+
+    return row[Math.floor(x / this.renderer.SPRITE_SIZE)] === true;
+  }
+
   draw() {
-    this.renderer.draw(this.model, this.vertexBuffer, this.indexBuffer,
+    this.renderer.draw(this.renderer.textureShader, this.model,
+                       this.vertexBuffer, this.indexBuffer,
                        this.indices.length);
   }
 }
