@@ -107,6 +107,16 @@ export default class {
     return row[Math.floor(x / this.renderer.SPRITE_SIZE)] === true;
   }
 
+  prevTileOffset(x) {
+    return (Math.floor(x / this.renderer.SPRITE_SIZE) + 1) *
+           this.renderer.SPRITE_SIZE - x;
+  }
+
+  nextTileOffset(x) {
+    return x - Math.floor(x / this.renderer.SPRITE_SIZE) *
+               this.renderer.SPRITE_SIZE;
+  }
+
   draw() {
     this.renderer.draw(this.renderer.textureShader, this.model,
                        this.vertexBuffer, this.indexBuffer,

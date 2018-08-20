@@ -88,13 +88,25 @@ export default class {
   update(deltaTime) {
     const newX = this.x + this.dx * deltaTime;
 
-    if (this.ignoreCollisions || !this.isBlocked(newX, this.y)) {
+    if (!this.ignoreCollisions && this.isBlocked(newX, this.y)) {
+      if (this.dx < 0) {
+        this.x = newX + this.map.prevTileOffset(newX);
+      } else {
+        this.x = newX - this.map.nextTileOffset(newX);
+      }
+    } else {
       this.x = newX;
     }
 
     const newY = this.y + this.dy * deltaTime;
 
-    if (this.ignoreCollisions || !this.isBlocked(this.x, newY)) {
+    if (!this.ignoreCollisions && this.isBlocked(this.x, newY)) {
+      if (this.dy < 0) {
+        this.y = newY + this.map.prevTileOffset(newY);
+      } else {
+        this.y = newY - this.map.nextTileOffset(newY);
+      }
+    } else {
       this.y = newY;
     }
 
@@ -108,10 +120,10 @@ export default class {
 
   isBlocked(x, y) {
     return this.map.isBlocked(x, y) ||
-           this.map.isBlocked(x, y + this.renderer.SPRITE_SIZE) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE, y) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE,
-                              y + this.renderer.SPRITE_SIZE);
+           this.map.isBlocked(x, y + this.renderer.SPRITE_SIZE - 1) ||
+           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1, y) ||
+           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1,
+                              y + this.renderer.SPRITE_SIZE - 1);
   }
 
   draw() {
