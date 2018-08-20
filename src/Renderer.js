@@ -75,6 +75,7 @@ export default class {
 
       this.setUpTexture();
     });
+    image.crossOrigin = '';
     image.src = TILES_TEXTURE;
   }
 
