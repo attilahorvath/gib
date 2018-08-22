@@ -1,45 +1,23 @@
-function components(type) {
+function numComponents(gl, type) {
   switch (type) {
-  case 'float':
+  case gl.FLOAT:
     return 1;
-  case 'vec2':
+  case gl.FLOAT_VEC2:
     return 2;
-  case 'vec3':
+  case gl.FLOAT_VEC3:
     return 3;
-  case 'vec4':
+  case gl.FLOAT_VEC4:
     return 4;
-  case 'mat3':
+  case gl.FLOAT_MAT3:
     return 9;
-  case 'mat4':
+  case gl.FLOAT_MAT4:
     return 16;
   }
-}
-
-function parseShader(combinedShaders, pattern) {
-  let matchResult;
-  const result = [];
-
-  while ((matchResult = pattern.exec(combinedShaders)) !== null) {
-    result.push(
-      { type: matchResult[2], name: matchResult[3],
-        components: components(matchResult[2]) }
-    );
-  }
-
-  return result;
 }
 
 export default class {
   constructor(gl, vertexShaderSource, fragmentShaderSource) {
     this.gl = gl;
-
-    const combinedShaders = `${vertexShaderSource}\n${fragmentShaderSource}`;
-
-    this.uniforms = parseShader(combinedShaders,
-                                /uniform\s+(\w+\s+)*(\w+)\s+(\w+)\s*;/g);
-
-    this.attributes = parseShader(combinedShaders,
-                                  /attribute\s+(\w+\s+)*(\w+)\s+(\w+)\s*;/g);
 
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertexShader, vertexShaderSource);
@@ -54,18 +32,38 @@ export default class {
     gl.attachShader(this.program, fragmentShader);
     gl.linkProgram(this.program);
 
-    for (const uniform of this.uniforms) {
+    this.uniforms = [];
+
+    const numUniforms = gl.getProgramParameter(this.program,
+                                               gl.ACTIVE_UNIFORMS);
+
+    for (let i = 0; i < numUniforms; i++) {
+      const uniform = gl.getActiveUniform(this.program, i);
+      const location = gl.getUniformLocation(this.program, uniform.name);
+
       this[uniform.name] = null;
 
-      uniform.location = gl.getUniformLocation(this.program, uniform.name);
+      this.uniforms.push(
+        { type: uniform.type, name: uniform.name, location: location }
+      );
     }
 
+    this.attributes = [];
     this.stride = 0;
 
-    for (const attribute of this.attributes) {
-      attribute.location = gl.getAttribLocation(this.program, attribute.name);
+    const numAttribs = gl.getProgramParameter(this.program,
+                                              gl.ACTIVE_ATTRIBUTES);
 
-      this.stride += attribute.components * 4;
+    for (let i = 0; i < numAttribs; i++) {
+      const attribute = gl.getActiveAttrib(this.program, i);
+      const location = gl.getAttribLocation(this.program, attribute.name);
+      const components = numComponents(gl, attribute.type);
+
+      this.attributes.push(
+        { name: attribute.name, location: location, components: components }
+      );
+
+      this.stride += components * 4;
     }
   }
 
@@ -84,10 +82,10 @@ export default class {
 
     for (const uniform of this.uniforms) {
       switch (uniform.type) {
-      case 'mat2':
+      case this.gl.FLOAT_MAT2:
         this.gl.uniformMatrix2fv(uniform.location, false, this[uniform.name]);
         break;
-      case 'mat4':
+      case this.gl.FLOAT_MAT4:
         this.gl.uniformMatrix4fv(uniform.location, false, this[uniform.name]);
         break;
       }
