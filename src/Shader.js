@@ -65,6 +65,8 @@ export default class {
 
       this.stride += components * 4;
     }
+
+    this.attributes.sort((a, b) => a.name < b.name ? -1 : 1);
   }
 
   use() {
