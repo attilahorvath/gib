@@ -1,18 +1,10 @@
-import Sprite from './Sprite';
+export default class {
+  constructor(renderer, map) {
+    this.renderer = renderer;
+    this.map = map;
 
-const GIB_Z = 0.7;
-
-export default class extends Sprite {
-  constructor(renderer, map, x, y) {
-    super(renderer, map, x, y, GIB_Z, 2, 0);
-
-    this.top = new Sprite(renderer, map, x, y - renderer.SPRITE_SIZE, GIB_Z,
-                          2, 0);
-    this.bottom = new Sprite(renderer, map, x, y, GIB_Z, 3, 0,
-                             [[3, 0], [4, 0], [5, 0], [6, 0]]);
-
-    this.top.ignoreCollisions = true;
-    this.bottom.ignoreCollisions = true;
+    this.dx = 0.0;
+    this.dy = 0.0;
 
     this.leftPressed = false;
     this.rightPressed = false;
@@ -79,34 +71,45 @@ export default class extends Sprite {
       this.dy += 0.1;
     }
 
-    super.update(deltaTime);
+    this.sprite.frameTimer.enabled = this.dx !== 0.0;
+    this.sprite.frameDirection = Math.sign(this.dx);
 
-    this.top.x = this.x;
-    this.top.y = this.y - this.renderer.SPRITE_SIZE;
+    const newX = this.sprite.x + this.dx * deltaTime;
 
-    this.bottom.x = this.x;
-    this.bottom.y = this.y;
+    if (!this.ignoreCollisions && this.isBlocked(newX, this.sprite.y)) {
+      if (this.dx < 0) {
+        this.sprite.x = newX + this.map.prevTileOffset(newX);
+      } else {
+        this.sprite.x = newX - this.map.nextTileOffset(newX);
+      }
+    } else {
+      this.sprite.x = newX;
+    }
 
-    this.bottom.frameDirection = Math.sign(this.dx);
-    this.bottom.frameTimer.enabled = this.dx !== 0.0;
+    const newY = this.sprite.y + this.dy * deltaTime;
 
-    this.top.update(deltaTime);
-    this.bottom.update(deltaTime);
+    if (!this.ignoreCollisions && this.isBlocked(this.sprite.x, newY)) {
+      if (this.dy < 0) {
+        this.sprite.y = newY + this.map.prevTileOffset(newY);
+      } else {
+        this.sprite.y = newY - this.map.nextTileOffset(newY);
+      }
+    } else {
+      this.sprite.y = newY;
+    }
 
-    this.renderer.cameraX = this.bottom.x + this.renderer.SPRITE_SIZE / 2.0 -
+    this.renderer.cameraX = this.sprite.x + this.renderer.SPRITE_SIZE / 2.0 -
                             this.renderer.width / 2.0;
 
-    this.renderer.cameraY = this.bottom.y + this.renderer.SPRITE_SIZE / 2.0 -
+    this.renderer.cameraY = this.sprite.y + this.renderer.SPRITE_SIZE / 2.0 -
                             this.renderer.height / 2.0;
   }
 
   isBlocked(x, y) {
-    return this.top.isBlocked(x, y - this.renderer.SPRITE_SIZE) ||
-           this.bottom.isBlocked(x, y);
-  }
-
-  draw() {
-    this.bottom.draw();
-    this.top.draw();
+    return this.map.isBlocked(x, y) ||
+           this.map.isBlocked(x, y + this.renderer.SPRITE_SIZE - 1) ||
+           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1, y) ||
+           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1,
+                              y + this.renderer.SPRITE_SIZE - 1);
   }
 }

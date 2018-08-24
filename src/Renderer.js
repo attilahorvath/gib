@@ -1,5 +1,3 @@
-import textureVertexShader from '../shaders/texture.vert';
-import textureFragmentShader from '../shaders/texture.frag';
 import spriteVertexShader from '../shaders/sprite.vert';
 import spriteFragmentShader from '../shaders/sprite.frag';
 
@@ -35,11 +33,15 @@ export default class {
 
     this.gl.clearColor(0, 0.53, 1, 1);
 
-    this.textureShader = new Shader(this.gl, textureVertexShader,
-                                    textureFragmentShader);
-
     this.spriteShader = new Shader(this.gl, spriteVertexShader,
                                    spriteFragmentShader);
+
+    this.spriteShader.texSize = new Float32Array(
+      [TILES_TEXTURE_WIDTH, TILES_TEXTURE_HEIGHT]
+    );
+
+    this.spriteShader.tileSize = new Float32Array([TILE_SIZE, TILE_SIZE]);
+    this.spriteShader.spriteSize = SPRITE_SIZE;
 
     this.projection = new Float32Array([
       2.0 / width, 0.0, 0.0, 0.0,
@@ -107,9 +109,12 @@ export default class {
     this.view[13] = -this.cameraY;
   }
 
-  draw(shader, model, vertexBuffer, indexBuffer, count) {
+  draw(shader, model, vertexBuffer, indexBuffer, count, points = false) {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+    if (indexBuffer) {
+      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    }
 
     shader.projection = this.projection;
     shader.view = this.view;
@@ -117,6 +122,12 @@ export default class {
 
     shader.use();
 
-    this.gl.drawElements(this.gl.TRIANGLES, count, this.gl.UNSIGNED_SHORT, 0);
+    const mode = points ? this.gl.POINTS : this.gl.TRIANGLES;
+
+    if (indexBuffer) {
+      this.gl.drawElements(mode, count, this.gl.UNSIGNED_SHORT, 0);
+    } else {
+      this.gl.drawArrays(mode, 0, count);
+    }
   }
 }

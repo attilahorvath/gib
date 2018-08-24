@@ -82,6 +82,12 @@ export default class {
 
     for (const uniform of this.uniforms) {
       switch (uniform.type) {
+      case this.gl.FLOAT:
+        this.gl.uniform1f(uniform.location, this[uniform.name]);
+        break;
+      case this.gl.FLOAT_VEC2:
+        this.gl.uniform2fv(uniform.location, this[uniform.name]);
+        break;
       case this.gl.FLOAT_MAT2:
         this.gl.uniformMatrix2fv(uniform.location, false, this[uniform.name]);
         break;

@@ -1,23 +1,32 @@
 import Timer from "./Timer";
 
-let vertices;
-let indices;
-
-let vertexBuffer;
-let indexBuffer;
-
 export default class {
-  constructor(renderer, map, x, y, z, u, v, frames) {
-    this.renderer = renderer;
-    this.map = map;
+  constructor() {
+    this.active = false;
+
+    this.x = 0.0;
+    this.y = 0.0;
+    this.z = 0.0;
+
+    this.u = 0.0;
+    this.v = 0.0;
+  }
+
+  spawn(x, y, z, u, v, controller, frames) {
+    this.active = true;
 
     this.x = x;
     this.y = y;
+    this.z = z;
 
-    this.dx = 0;
-    this.dy = 0;
+    this.u = u;
+    this.v = v;
 
-    this.ignoreCollisions = false;
+    if (controller) {
+      controller.sprite = this;
+
+      this.controller = controller;
+    }
 
     if (frames) {
       this.frames = frames;
@@ -32,104 +41,32 @@ export default class {
           this.currentFrame = this.frames.length - 1;
         }
 
-        this.updateFrame(this.frames[this.currentFrame]);
+        this.u = this.frames[this.currentFrame][0];
+        this.v = this.frames[this.currentFrame][1];
       }, true);
     }
-
-    if (!vertices) {
-      vertices = new Float32Array([
-        0.0, 0.0, 0.0, 0.0,
-        0.0, renderer.SPRITE_SIZE, 0.0, 1.0,
-        renderer.SPRITE_SIZE, 0.0, 1.0, 0.0,
-        renderer.SPRITE_SIZE, renderer.SPRITE_SIZE, 1.0, 1.0
-      ]);
-    }
-
-    if (!indices) {
-      indices = new Uint16Array([
-        0, 1, 2,
-        2, 1, 3
-      ]);
-    }
-
-    if (!vertexBuffer) {
-      vertexBuffer = renderer.gl.createBuffer();
-      renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, vertexBuffer);
-      renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, vertices,
-                             renderer.gl.STATIC_DRAW);
-    }
-
-    if (!indexBuffer) {
-      indexBuffer = renderer.gl.createBuffer();
-      renderer.gl.bindBuffer(renderer.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-      renderer.gl.bufferData(renderer.gl.ELEMENT_ARRAY_BUFFER, indices,
-                             renderer.gl.STATIC_DRAW);
-    }
-
-    this.model = new Float32Array([
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, z, 1.0
-    ]);
-
-    this.updateFrame([u, v]);
-  }
-
-  updateFrame(texCoords) {
-    this.texBounds = new Float32Array([
-      this.renderer.tileTextureU(texCoords[0]),
-      this.renderer.tileTextureU(texCoords[0] + 1),
-      this.renderer.tileTextureV(texCoords[1]),
-      this.renderer.tileTextureV(texCoords[1] + 1)
-    ]);
   }
 
   update(deltaTime) {
-    const newX = this.x + this.dx * deltaTime;
-
-    if (!this.ignoreCollisions && this.isBlocked(newX, this.y)) {
-      if (this.dx < 0) {
-        this.x = newX + this.map.prevTileOffset(newX);
-      } else {
-        this.x = newX - this.map.nextTileOffset(newX);
-      }
-    } else {
-      this.x = newX;
+    if (this.controller) {
+      this.controller.update(deltaTime);
     }
-
-    const newY = this.y + this.dy * deltaTime;
-
-    if (!this.ignoreCollisions && this.isBlocked(this.x, newY)) {
-      if (this.dy < 0) {
-        this.y = newY + this.map.prevTileOffset(newY);
-      } else {
-        this.y = newY - this.map.nextTileOffset(newY);
-      }
-    } else {
-      this.y = newY;
-    }
-
-    this.model[12] = this.x;
-    this.model[13] = this.y;
 
     if (this.frameTimer) {
       this.frameTimer.update(deltaTime);
     }
-  }
 
-  isBlocked(x, y) {
-    return this.map.isBlocked(x, y) ||
-           this.map.isBlocked(x, y + this.renderer.SPRITE_SIZE - 1) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1, y) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1,
-                              y + this.renderer.SPRITE_SIZE - 1);
-  }
+    const changed = this.oldX !== this.x || this.oldY !== this.y ||
+                    this.oldZ !== this.z || this.oldU !== this.u ||
+                    this.oldV !== this.v;
 
-  draw() {
-    this.renderer.spriteShader.texBounds = this.texBounds;
+    this.oldX = this.x;
+    this.oldY = this.y;
+    this.oldZ = this.z;
 
-    this.renderer.draw(this.renderer.spriteShader, this.model,
-                       vertexBuffer, indexBuffer, indices.length);
+    this.oldU = this.u;
+    this.oldV = this.v;
+
+    return changed;
   }
 }

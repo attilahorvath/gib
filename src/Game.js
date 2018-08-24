@@ -1,4 +1,5 @@
 import Renderer from './Renderer';
+import SpriteSheet from './SpriteSheet';
 import Map from './Map';
 
 const SCREEN_WIDTH = 800;
@@ -8,9 +9,9 @@ export default class {
   constructor() {
     this.renderer = new Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    this.entities = [];
+    this.spriteSheet = new SpriteSheet(this.renderer);
 
-    this.map = new Map(this.renderer, this.entities);
+    this.map = new Map(this.renderer, this.spriteSheet);
 
     this.lastTimestamp = performance.now();
   }
@@ -18,7 +19,7 @@ export default class {
   update(timestamp) {
     const deltaTime = timestamp - this.lastTimestamp;
 
-    this.entities.forEach(entity => entity.update(deltaTime));
+    this.spriteSheet.update(deltaTime);
     this.renderer.update();
 
     this.lastTimestamp = timestamp;
@@ -27,7 +28,6 @@ export default class {
   render() {
     this.renderer.clear();
 
-    this.map.draw();
-    this.entities.forEach(entity => entity.draw());
+    this.spriteSheet.draw();
   }
 }
