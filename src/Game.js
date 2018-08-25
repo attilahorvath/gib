@@ -2,12 +2,9 @@ import Renderer from './Renderer';
 import SpriteSheet from './SpriteSheet';
 import Map from './Map';
 
-const SCREEN_WIDTH = 800;
-const SCREEN_HEIGHT = 600;
-
 export default class {
   constructor() {
-    this.renderer = new Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.renderer = new Renderer();
 
     this.spriteSheet = new SpriteSheet(this.renderer);
 

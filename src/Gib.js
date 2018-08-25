@@ -98,18 +98,18 @@ export default class {
       this.sprite.y = newY;
     }
 
-    this.renderer.cameraX = this.sprite.x + this.renderer.SPRITE_SIZE / 2.0 -
-                            this.renderer.width / 2.0;
+    this.renderer.cameraX = this.sprite.x + SPRITE_SIZE / 2.0 -
+                            SCREEN_WIDTH / 2.0;
 
-    this.renderer.cameraY = this.sprite.y + this.renderer.SPRITE_SIZE / 2.0 -
-                            this.renderer.height / 2.0;
+    this.renderer.cameraY = this.sprite.y + SPRITE_SIZE / 2.0 -
+                            SCREEN_HEIGHT / 2.0;
   }
 
   isBlocked(x, y) {
     return this.map.isBlocked(x, y) ||
-           this.map.isBlocked(x, y + this.renderer.SPRITE_SIZE - 1) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1, y) ||
-           this.map.isBlocked(x + this.renderer.SPRITE_SIZE - 1,
-                              y + this.renderer.SPRITE_SIZE - 1);
+           this.map.isBlocked(x, y + SPRITE_SIZE - 1) ||
+           this.map.isBlocked(x + SPRITE_SIZE - 1, y) ||
+           this.map.isBlocked(x + SPRITE_SIZE - 1,
+                              y + SPRITE_SIZE - 1);
   }
 }

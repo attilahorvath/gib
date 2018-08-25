@@ -7,6 +7,7 @@
   "devDependencies": {
     "rollup": "^0.64.1",
     "rollup-plugin-glsl": "^1.2.0",
+    "rollup-plugin-replace": "^2.0.0",
     "rollup-plugin-string": "^2.0.2",
     "rollup-plugin-terser": "^1.0.1"
   },

@@ -3,25 +3,11 @@ import spriteFragmentShader from '../shaders/sprite.frag';
 
 import Shader from './Shader';
 
-const TILES_TEXTURE = 'textures/tiles.png';
-const TILES_TEXTURE_WIDTH = 128.0;
-const TILES_TEXTURE_HEIGHT = 32.0;
-const TILE_SIZE = 16.0;
-const SPRITE_SIZE = 64.0;
-
 export default class {
-  constructor(width, height) {
-    this.TILES_TEXTURE_WIDTH = TILES_TEXTURE_WIDTH;
-    this.TILES_TEXTURE_HEIGHT = TILES_TEXTURE_HEIGHT;
-    this.TILE_SIZE = TILE_SIZE;
-    this.SPRITE_SIZE = SPRITE_SIZE;
-
-    this.width = width;
-    this.height = height;
-
+  constructor() {
     const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = SCREEN_WIDTH;
+    canvas.height = SCREEN_HEIGHT;
     document.body.appendChild(canvas);
 
     this.gl = canvas.getContext('webgl', { antialias: false });
@@ -36,16 +22,9 @@ export default class {
     this.spriteShader = new Shader(this.gl, spriteVertexShader,
                                    spriteFragmentShader);
 
-    this.spriteShader.texSize = new Float32Array(
-      [TILES_TEXTURE_WIDTH, TILES_TEXTURE_HEIGHT]
-    );
-
-    this.spriteShader.tileSize = new Float32Array([TILE_SIZE, TILE_SIZE]);
-    this.spriteShader.spriteSize = SPRITE_SIZE;
-
     this.projection = new Float32Array([
-      2.0 / width, 0.0, 0.0, 0.0,
-      0.0, -2.0 / height, 0.0, 0.0,
+      2.0 / SCREEN_WIDTH, 0.0, 0.0, 0.0,
+      0.0, -2.0 / SCREEN_HEIGHT, 0.0, 0.0,
       0.0, 0.0, -1.0, 0.0,
       -1.0, 1.0, 0.0, 1.0
     ]);
@@ -78,7 +57,7 @@ export default class {
       this.setUpTexture();
     });
     image.crossOrigin = '';
-    image.src = TILES_TEXTURE;
+    image.src = 'TILES_TEXTURE';
   }
 
   setUpTexture() {
@@ -93,11 +72,11 @@ export default class {
   }
 
   tileTextureU(u) {
-    return (this.TILE_SIZE * u) / this.TILES_TEXTURE_WIDTH;
+    return (TILE_SIZE * u) / TILES_TEXTURE_WIDTH;
   }
 
   tileTextureV(v) {
-    return (this.TILE_SIZE * v) / this.TILES_TEXTURE_HEIGHT;
+    return (TILE_SIZE * v) / TILES_TEXTURE_HEIGHT;
   }
 
   clear() {

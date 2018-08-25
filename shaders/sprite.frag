@@ -2,15 +2,14 @@ precision highp float;
 
 uniform sampler2D tex;
 
-uniform vec2 tileSize;
-uniform vec2 texSize;
-
 varying vec2 texCoord;
 
 void main() {
   vec2 texCoord = mix(
-    (tileSize * texCoord) / texSize,
-    (tileSize * (texCoord + vec2(1.0, 1.0))) / texSize,
+    (vec2(TILE_SIZE) * texCoord) /
+      vec2(TILES_TEXTURE_WIDTH, TILES_TEXTURE_HEIGHT),
+    (vec2(TILE_SIZE) * (texCoord + vec2(1.0))) /
+      vec2(TILES_TEXTURE_WIDTH, TILES_TEXTURE_HEIGHT),
     gl_PointCoord
   );
 

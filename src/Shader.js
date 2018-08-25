@@ -1,4 +1,4 @@
-function numComponents(gl, type) {
+const numComponents = (gl, type) => {
   switch (type) {
   case gl.FLOAT:
     return 1;
