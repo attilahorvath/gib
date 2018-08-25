@@ -2,7 +2,7 @@ import map from '../assets/map.txt';
 import Gib from './Gib';
 
 export default class {
-  constructor(renderer, spriteSheet) {
+  constructor(renderer, spriteSheet, input) {
     this.tiles = [];
 
     const rows = map.split('\n');
@@ -38,7 +38,7 @@ export default class {
         case 'G':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, 0.7, 3.0, 0.0,
-            new Gib(renderer, this),
+            new Gib(renderer, this, input),
             [[3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0]]
           );
           this.gib = new Gib(

@@ -1,6 +1,6 @@
 import Sprite from "./Sprite";
 
-const MAX_SPRITES = 128;
+const MAX_SPRITES = 512;
 const VERTEX_SIZE = 20;
 
 export default class {
