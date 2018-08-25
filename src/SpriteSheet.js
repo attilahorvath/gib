@@ -12,7 +12,7 @@ export default class {
     renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, MAX_SPRITES * VERTEX_SIZE,
                            renderer.gl.STATIC_DRAW);
 
-    this.spriteVertex = new Float32Array(5);
+    this.spriteVertex = new Float32Array(VERTEX_SIZE / FLOAT_SIZE);
 
     this.sprites = [];
 

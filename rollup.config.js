@@ -31,7 +31,17 @@ export default {
       LEFT:     '0b0000100',
       RIGHT:    '0b0001000',
       ACTION_A: '0b0100000',
-      ACTION_B: '0b1000000'
+      ACTION_B: '0b1000000',
+
+      PARTICLE_SIZE: '4.0',
+      PARTICLE_LIFETIME: '400.0',
+
+      MAP_Z: '0.1',
+      GIB_Z: '0.7',
+      DECAL_Z: '0.8',
+      PARTICLE_Z: '0.9',
+
+      FLOAT_SIZE: '4'
     }),
     string({
       include: 'assets/**/*.txt'

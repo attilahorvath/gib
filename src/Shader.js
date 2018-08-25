@@ -63,7 +63,7 @@ export default class {
         { name: attribute.name, location: location, components: components }
       );
 
-      this.stride += components * 4;
+      this.stride += components * FLOAT_SIZE;
     }
 
     this.attributes.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -79,7 +79,7 @@ export default class {
       this.gl.vertexAttribPointer(attribute.location, attribute.components,
                                   this.gl.FLOAT, false, this.stride, offset);
 
-      offset += attribute.components * 4;
+      offset += attribute.components * FLOAT_SIZE;
     }
 
     for (const uniform of this.uniforms) {

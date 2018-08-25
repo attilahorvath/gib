@@ -1,6 +1,9 @@
 import spriteVertexShader from '../shaders/sprite.vert';
 import spriteFragmentShader from '../shaders/sprite.frag';
 
+import particleVertexShader from '../shaders/particle.vert';
+import particleFragmentShader from '../shaders/particle.frag';
+
 import Shader from './Shader';
 
 export default class {
@@ -21,6 +24,9 @@ export default class {
 
     this.spriteShader = new Shader(this.gl, spriteVertexShader,
                                    spriteFragmentShader);
+
+    this.particleShader = new Shader(this.gl, particleVertexShader,
+                                     particleFragmentShader);
 
     this.projection = new Float32Array([
       2.0 / SCREEN_WIDTH, 0.0, 0.0, 0.0,

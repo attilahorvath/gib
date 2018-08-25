@@ -7,8 +7,8 @@ attribute vec2 vertex1TexCoord;
 varying vec2 texCoord;
 
 void main() {
-  texCoord = vertex1TexCoord;
-
-  gl_Position = projection * view * vec4(vertex0Position, 1.0);
   gl_PointSize = SPRITE_SIZE;
+  gl_Position = projection * view * vec4(vertex0Position, 1.0);
+
+  texCoord = vertex1TexCoord;
 }

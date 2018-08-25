@@ -2,7 +2,9 @@ import map from '../assets/map.txt';
 import Gib from './Gib';
 
 export default class {
-  constructor(renderer, spriteSheet, input) {
+  constructor(renderer, spriteSheet, input, particleSystem) {
+    const gib = new Gib(renderer, this, input, particleSystem);
+
     this.tiles = [];
 
     const rows = map.split('\n');
@@ -32,18 +34,13 @@ export default class {
           break;
         case 'D':
           spriteSheet.spawnSprite(
-            SPRITE_SIZE * x, SPRITE_SIZE * y, 0.9, 0.0, 1.0
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 0.0, 1.0
           );
           break;
         case 'G':
           spriteSheet.spawnSprite(
-            SPRITE_SIZE * x, SPRITE_SIZE * y, 0.7, 3.0, 0.0,
-            new Gib(renderer, this, input),
+            SPRITE_SIZE * x, SPRITE_SIZE * y, GIB_Z, 3.0, 0.0, gib,
             [[3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0]]
-          );
-          this.gib = new Gib(
-            renderer, spriteSheet, this,
-            SPRITE_SIZE * x, SPRITE_SIZE * y
           );
           break;
         }
@@ -55,7 +52,7 @@ export default class {
         }
 
         spriteSheet.spawnSprite(
-          SPRITE_SIZE * x, SPRITE_SIZE * y, 0.1, u, v
+          SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, u, v
         );
 
         this.tiles[y].push(true);

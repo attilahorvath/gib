@@ -1,8 +1,9 @@
 export default class {
-  constructor(renderer, map, input) {
+  constructor(renderer, map, input, particleSystem) {
     this.renderer = renderer;
     this.map = map;
     this.input = input;
+    this.particleSystem = particleSystem;
 
     this.dx = 0.0;
     this.dy = 0.0;
@@ -14,46 +15,73 @@ export default class {
     this.lastDirection = 0.0;
   }
 
+  get x() {
+    return this.sprite.x;
+  }
+
+  get y() {
+    return this.sprite.y;
+  }
+
+  set x(x) {
+    this.sprite.x = x;
+  }
+
+  set y(y) {
+    this.sprite.y = y;
+  }
+
   update(deltaTime) {
-    if (this.onPlatform()) {
+    if (this.isBlocked(this.x, this.y + 1)) {
       this.ay = 0.0;
       this.dy = 0.0;
-    } else if (this.platformHit()) {
+    } else if (this.isBlocked(this.x, this.y - 1)) {
       this.ay = 0.002;
       this.dy = 0.0;
     } else {
       this.ay = 0.002;
     }
 
+    // this.particleSystem.emitParticle(this.x, this.y, 1.0, 0.0, 0.0, Math.random() - 0.5, Math.random() - 0.5);
+
     if (this.input.pressed(LEFT)) {
+      this.particleSystem.emitParticle(this.x, this.y, 1.0, 1.0, 1.0, 0.0, 0.0);
+
       if (this.ax > 0.0) {
         this.ax = 0.0;
       }
 
-      this.ax -= 0.0001;
+      if (!this.isBlocked(this.x - 1, this.y)) {
+        this.ax -= 0.0001;
+      }
 
       this.direction = -1.0;
       this.lastDirection = 0.0;
     } else if (this.input.pressed(RIGHT)) {
+      this.particleSystem.emitParticle(this.x, this.y, 1.0, 1.0, 1.0, 0.0, 0.0);
+
       if (this.ax < 0.0) {
         this.ax = 0.0;
       }
 
-      this.ax += 0.0001;
+      if (!this.isBlocked(this.x + 1, this.y)) {
+        this.ax += 0.0001;
+      }
 
       this.direction = 1.0;
       this.lastDirection = 0.0;
     } else {
       if (this.direction !== 0.0) {
+        this.ax = -this.ax;
+
         this.lastDirection = this.direction;
         this.direction = 0.0;
-        this.ax = -this.ax;
       }
 
-      if (this.lastDirection > 0.0 && this.dx < 0.001) {
-        this.dx = 0.0;
-        this.ax = 0.0;
-      } else if (this.lastDirection < 0.0 && this.dx > 0.001) {
+      if ((this.lastDirection > 0.0 && this.dx < 0.001) ||
+          (this.lastDirection < 0.0 && this.dx > 0.001) ||
+          this.isBlocked(this.x - 1, this.y) ||
+          this.isBlocked(this.x + 1, this.y)) {
         this.dx = 0.0;
         this.ax = 0.0;
       }
@@ -87,49 +115,35 @@ export default class {
     this.sprite.frameTimer.enabled = this.dx !== 0.0;
     this.sprite.frameDirection = Math.sign(this.dx);
 
-    const newX = this.sprite.x + this.dx * deltaTime;
+    let newX = this.x + this.dx * deltaTime;
 
-    if (!this.ignoreCollisions && this.isBlocked(newX, this.sprite.y)) {
+    if (this.isBlocked(newX, this.y)) {
       if (this.dx < 0) {
-        this.sprite.x = newX + this.map.prevTileOffset(newX);
+        newX += this.map.prevTileOffset(newX);
       } else {
-        this.sprite.x = newX - this.map.nextTileOffset(newX);
+        newX -= this.map.nextTileOffset(newX);
       }
-    } else {
-      this.sprite.x = newX;
     }
 
-    const newY = this.sprite.y + this.dy * deltaTime;
+    this.x = newX;
 
-    if (!this.ignoreCollisions && this.isBlocked(this.sprite.x, newY)) {
+    let newY = this.y + this.dy * deltaTime;
+
+    if (this.isBlocked(this.x, newY)) {
       if (this.dy < 0) {
-        this.sprite.y = newY + this.map.prevTileOffset(newY);
+        newY += this.map.prevTileOffset(newY);
       } else {
-        this.sprite.y = newY - this.map.nextTileOffset(newY);
+        newY -= this.map.nextTileOffset(newY);
       }
-    } else {
-      this.sprite.y = newY;
     }
 
-    this.renderer.cameraX = this.sprite.x + SPRITE_SIZE / 2.0 -
+    this.y = newY;
+
+    this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 -
                             SCREEN_WIDTH / 2.0;
 
-    this.renderer.cameraY = this.sprite.y + SPRITE_SIZE / 2.0 -
+    this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 -
                             SCREEN_HEIGHT / 2.0;
-  }
-
-  onPlatform() {
-    return this.map.isBlocked(this.sprite.x,
-                              this.sprite.y + SPRITE_SIZE) ||
-           this.map.isBlocked(this.sprite.x + SPRITE_SIZE - 1,
-                              this.sprite.y + SPRITE_SIZE);
-  }
-
-  platformHit() {
-    return this.map.isBlocked(this.sprite.x,
-                              this.sprite.y - 1) ||
-           this.map.isBlocked(this.sprite.x + SPRITE_SIZE - 1,
-                              this.sprite.y - 1);
   }
 
   isBlocked(x, y) {
