@@ -17,11 +17,6 @@ export default class {
       for (let x = 0; x < rows[y].length; x++) {
         const type = rows[y][x];
 
-        if (type === ' ') {
-          this.tiles[y].push(false);
-          continue;
-        }
-
         let u = null;
         let v = 0;
 
@@ -46,7 +41,7 @@ export default class {
         }
 
         if (u === null) {
-          this.tiles[y].push(false);
+          this.tiles[y].push(null);
 
           continue;
         }
@@ -55,19 +50,19 @@ export default class {
           SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, u, v
         );
 
-        this.tiles[y].push(true);
+        this.tiles[y].push(type);
       }
     }
   }
 
-  isBlocked(x, y) {
+  tileAt(x, y) {
     const row = this.tiles[Math.floor(y / SPRITE_SIZE)];
 
     if (!row) {
-      return false;
+      return null;
     }
 
-    return row[Math.floor(x / SPRITE_SIZE)] === true;
+    return row[Math.floor(x / SPRITE_SIZE)];
   }
 
   prevTileOffset(x) {

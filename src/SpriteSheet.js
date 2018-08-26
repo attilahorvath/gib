@@ -22,8 +22,8 @@ export default class {
   }
 
   insertSprite(i, sprite) {
-    this.spriteVertex[0] = sprite.x;
-    this.spriteVertex[1] = sprite.y;
+    this.spriteVertex[0] = sprite.x + SPRITE_SIZE / 2.0;
+    this.spriteVertex[1] = sprite.y + SPRITE_SIZE / 2.0;
     this.spriteVertex[2] = sprite.z;
     this.spriteVertex[3] = sprite.u;
     this.spriteVertex[4] = sprite.v;

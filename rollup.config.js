@@ -34,7 +34,7 @@ export default {
       ACTION_B: '0b1000000',
 
       PARTICLE_SIZE: '4.0',
-      PARTICLE_LIFETIME: '400.0',
+      PARTICLE_LIFETIME: '200.0',
 
       MAP_Z: '0.1',
       GIB_Z: '0.7',
