@@ -83,9 +83,9 @@ export default class extends SpriteController {
     super.update(deltaTime);
 
     if (this.dx < -0.1) {
-      this.kickUpDirt(this.x + SPRITE_SIZE - 11, tileBelow);
+      this.kickUpDirt(this.x + SPRITE_SIZE - 3, tileBelow);
     } else if (this.dx > 0.1) {
-      this.kickUpDirt(this.x + 10, tileBelow);
+      this.kickUpDirt(this.x + 2, tileBelow);
     }
 
     this.sprite.frameTimer.enabled = this.direction !== 0.0;
