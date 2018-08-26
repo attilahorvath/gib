@@ -20,6 +20,11 @@ export default class {
 
   update(timestamp) {
     const deltaTime = timestamp - this.lastTimestamp;
+    this.lastTimestamp = timestamp;
+
+    if (deltaTime <= 0 || deltaTime >= 100) {
+      return;
+    }
 
     this.input.update();
 
@@ -27,8 +32,6 @@ export default class {
     this.particleSystem.update(deltaTime);
 
     this.renderer.update();
-
-    this.lastTimestamp = timestamp;
   }
 
   render() {
