@@ -27,6 +27,11 @@ export default class {
         case '2':
           u = 1;
           break;
+        case 'R':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0
+          );
+          break;
         case 'D':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 0.0, 1.0
@@ -34,8 +39,8 @@ export default class {
           break;
         case 'G':
           spriteSheet.spawnSprite(
-            SPRITE_SIZE * x, SPRITE_SIZE * y, GIB_Z, 3.0, 0.0, gib,
-            [[3.0, 0.0], [4.0, 0.0], [5.0, 0.0], [6.0, 0.0]]
+            SPRITE_SIZE * x, SPRITE_SIZE * y, GIB_Z, 2.0, 0.0, gib,
+            [[2.0, 0.0], [3.0, 0.0], [4.0, 0.0], [5.0, 0.0]]
           );
           break;
         }
