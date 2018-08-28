@@ -47,13 +47,13 @@ export default class {
     }
   }
 
-  update(deltaTime) {
+  update() {
     if (this.controller) {
-      this.controller.update(deltaTime);
+      this.controller.update();
     }
 
     if (this.frameTimer) {
-      this.frameTimer.update(deltaTime);
+      this.frameTimer.update();
     }
 
     const changed = this.oldX !== this.x || this.oldY !== this.y ||

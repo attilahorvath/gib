@@ -12,13 +12,13 @@ export default class extends SpriteController {
     this.lastDirection = 0.0;
   }
 
-  update(deltaTime) {
-    const tileBelow = this.tileAt(this.x, this.y + 1);
+  update() {
+    const tileBelow = this.tileAt(0.0, 1.0);
 
     if (tileBelow) {
       this.ay = 0.0;
       this.dy = 0.0;
-    } else if (this.tileAt(this.x, this.y - 1)) {
+    } else if (this.tileAt(0.0, -1.0)) {
       this.ay = 0.002;
       this.dy = 0.0;
     } else {
@@ -30,7 +30,7 @@ export default class extends SpriteController {
         this.ax = 0.0;
       }
 
-      if (!this.tileAt(this.x - 1, this.y)) {
+      if (!this.tileAt(-1.0, 0.0)) {
         this.ax -= 0.0001;
       } else {
         this.dx = 0.0;
@@ -44,7 +44,7 @@ export default class extends SpriteController {
         this.ax = 0.0;
       }
 
-      if (!this.tileAt(this.x + 1, this.y)) {
+      if (!this.tileAt(1.0, 0.0)) {
         this.ax += 0.0001;
       } else {
         this.dx = 0.0;
@@ -63,8 +63,8 @@ export default class extends SpriteController {
 
       if ((this.lastDirection > 0.0 && this.dx < 0.001) ||
           (this.lastDirection < 0.0 && this.dx > 0.001) ||
-          this.tileAt(this.x - 1, this.y) ||
-          this.tileAt(this.x + 1, this.y)) {
+          this.tileAt(-1.0, 0.0) ||
+          this.tileAt(1.0, 0.0)) {
         this.dx = 0.0;
         this.ax = 0.0;
       }
@@ -80,7 +80,7 @@ export default class extends SpriteController {
       this.dy = -0.8;
     }
 
-    super.update(deltaTime);
+    super.update();
 
     if (this.dx < -0.1) {
       this.kickUpDirt(this.x + SPRITE_SIZE - 2, tileBelow);
@@ -88,6 +88,7 @@ export default class extends SpriteController {
       this.kickUpDirt(this.x + 1, tileBelow);
     }
 
+    this.sprite.frameTimer.timeout = tileBelow ? 100 : 40;
     this.sprite.frameTimer.enabled = this.direction !== 0.0;
     this.sprite.frameDirection = Math.sign(this.direction);
 

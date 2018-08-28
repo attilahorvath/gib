@@ -16,6 +16,8 @@ export default {
         'shaders/**/*.{vert,frag}'
       ],
 
+      TIME_STEP: '(1000.0 / 60.0)',
+
       SCREEN_WIDTH: '800.0',
       SCREEN_HEIGHT: '600.0',
 

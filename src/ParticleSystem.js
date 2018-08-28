@@ -39,8 +39,8 @@ export default class {
     this.nextIndex = (this.nextIndex + 1) % MAX_PARTICLES;
   }
 
-  update(deltaTime) {
-    this.time += deltaTime;
+  update() {
+    this.time += TIME_STEP;
   }
 
   draw() {

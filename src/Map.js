@@ -1,5 +1,6 @@
 import map from '../assets/map.txt';
 import Gib from './Gib';
+import Rock from './enemies/Rock';
 
 export default class {
   constructor(renderer, spriteSheet, input, particleSystem) {
@@ -29,7 +30,8 @@ export default class {
           break;
         case 'R':
           spriteSheet.spawnSprite(
-            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0,
+            new Rock(this, gib)
           );
           break;
         case 'D':

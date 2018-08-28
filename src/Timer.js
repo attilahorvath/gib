@@ -8,12 +8,12 @@ export default class {
     this.enabled = true;
   }
 
-  update(deltaTime) {
+  update() {
     if (!this.enabled) {
       return;
     }
 
-    this.progress += deltaTime;
+    this.progress += TIME_STEP;
 
     if (this.progress >= this.timeout) {
       this.callback();

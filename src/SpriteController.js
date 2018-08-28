@@ -30,9 +30,25 @@ export default class {
     this.sprite.y = y;
   }
 
-  update(deltaTime) {
-    this.dx += this.ax * deltaTime;
-    this.dy += this.ay * deltaTime;
+  get left() {
+    return this.x + this.hitboxX;
+  }
+
+  get right() {
+    return this.x + this.hitboxX + this.hitboxW - 1;
+  }
+
+  get top() {
+    return this.y + this.hitboxY;
+  }
+
+  get bottom() {
+    return this.y + this.hitboxY + this.hitboxH - 1;
+  }
+
+  update() {
+    this.dx += this.ax * TIME_STEP;
+    this.dy += this.ay * TIME_STEP;
 
     if (this.dx > 0.5) {
       this.dx = 0.5;
@@ -46,41 +62,31 @@ export default class {
       this.dy = -2.0;
     }
 
-    let newX = this.x + this.dx * deltaTime;
+    this.x += this.dx * TIME_STEP;
 
-    if (this.tileAt(newX, this.y)) {
+    if (this.tileAt()) {
       if (this.dx < 0) {
-        newX += this.map.prevTileOffset(newX + this.hitboxX);
+        this.x += this.map.prevTileOffset(this.left);
       } else {
-        newX -= this.map.nextTileOffset(newX + this.hitboxX + this.hitboxW - 1)
-                + 1;
+        this.x -= this.map.nextTileOffset(this.right) + 1;
       }
     }
 
-    this.x = newX;
+    this.y += this.dy * TIME_STEP;
 
-    let newY = this.y + this.dy * deltaTime;
-
-    if (this.tileAt(this.x, newY)) {
+    if (this.tileAt()) {
       if (this.dy < 0) {
-        newY += this.map.prevTileOffset(newY + this.hitboxY);
+        this.y += this.map.prevTileOffset(this.top);
       } else {
-        newY -= this.map.nextTileOffset(newY + this.hitboxY + this.hitboxH - 1)
-                + 1;
+        this.y -= this.map.nextTileOffset(this.bottom) + 1;
       }
     }
-
-    this.y = newY;
   }
 
-  tileAt(x, y) {
-    return this.map.tileAt(x + this.hitboxX,
-                           y + this.hitboxY) ||
-           this.map.tileAt(x + this.hitboxX,
-                           y + this.hitboxY + this.hitboxH - 1) ||
-           this.map.tileAt(x + this.hitboxX + this.hitboxW - 1,
-                           y + this.hitboxY) ||
-           this.map.tileAt(x + this.hitboxX + this.hitboxW - 1,
-                           y + this.hitboxY + this.hitboxH - 1);
+  tileAt(xOffset = 0, yOffset = 0) {
+    return this.map.tileAt(this.left + xOffset, this.top + yOffset) ||
+           this.map.tileAt(this.left + xOffset, this.bottom + yOffset) ||
+           this.map.tileAt(this.right + xOffset, this.top + yOffset) ||
+           this.map.tileAt(this.right + xOffset, this.bottom + yOffset);
   }
 }

@@ -15,23 +15,26 @@ export default class {
     this.map = new Map(this.renderer, this.spriteSheet, this.input,
                        this.particleSystem);
 
-    this.lastTimestamp = performance.now();
+    this.lastTimestamp = 0;
+    this.timeAccumulator = 0;
   }
 
   update(timestamp) {
     const deltaTime = timestamp - this.lastTimestamp;
     this.lastTimestamp = timestamp;
 
-    if (deltaTime <= 0 || deltaTime >= 100) {
-      return;
+    this.timeAccumulator += deltaTime;
+
+    while (this.timeAccumulator >= TIME_STEP) {
+      this.input.update();
+
+      this.spriteSheet.update();
+      this.particleSystem.update();
+
+      this.renderer.update();
+
+      this.timeAccumulator -= TIME_STEP;
     }
-
-    this.input.update();
-
-    this.spriteSheet.update(deltaTime);
-    this.particleSystem.update(deltaTime);
-
-    this.renderer.update();
   }
 
   render() {

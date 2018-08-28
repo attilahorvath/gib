@@ -51,12 +51,12 @@ export default class {
     }
   }
 
-  update(deltaTime) {
+  update() {
     for (let i = 0; i < MAX_SPRITES; i++) {
       const sprite = this.sprites[i];
 
       if (sprite.active) {
-        if (sprite.update(deltaTime)) {
+        if (sprite.update()) {
           this.insertSprite(i, sprite);
         }
       }
