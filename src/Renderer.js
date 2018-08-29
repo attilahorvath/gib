@@ -7,7 +7,7 @@ import particleFragmentShader from '../shaders/particle.frag';
 import Shader from './Shader';
 
 export default class {
-  constructor() {
+  constructor(game) {
     const canvas = document.createElement('canvas');
     canvas.width = SCREEN_WIDTH;
     canvas.height = SCREEN_HEIGHT;
@@ -61,6 +61,8 @@ export default class {
                          this.gl.UNSIGNED_BYTE, image);
 
       this.setUpTexture();
+
+      game.started = true;
     });
     image.crossOrigin = '';
     image.src = 'TILES_TEXTURE';
@@ -90,8 +92,8 @@ export default class {
   }
 
   update() {
-    this.view[12] = -this.cameraX;
-    this.view[13] = -this.cameraY;
+    this.view[12] = -Math.round(this.cameraX);
+    this.view[13] = -Math.round(this.cameraY);
   }
 
   draw(shader, model, vertexBuffer, indexBuffer, count, points = false) {

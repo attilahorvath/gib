@@ -1,6 +1,6 @@
 import Sprite from "./Sprite";
 
-const MAX_SPRITES = 512;
+const MAX_SPRITES = 8192;
 const VERTEX_SIZE = 20;
 
 export default class {
@@ -21,12 +21,12 @@ export default class {
     }
   }
 
-  insertSprite(i, sprite) {
-    this.spriteVertex[0] = sprite.x + SPRITE_SIZE / 2.0;
-    this.spriteVertex[1] = sprite.y + SPRITE_SIZE / 2.0;
-    this.spriteVertex[2] = sprite.z;
-    this.spriteVertex[3] = sprite.u;
-    this.spriteVertex[4] = sprite.v;
+  updateSprite(i, sprite) {
+    this.spriteVertex[0] = sprite.active ? sprite.x + SPRITE_SIZE / 2.0 : 0.0;
+    this.spriteVertex[1] = sprite.active ? sprite.y + SPRITE_SIZE / 2.0 : 0.0;
+    this.spriteVertex[2] = sprite.active ? sprite.z : 0.0;
+    this.spriteVertex[3] = sprite.active ? sprite.u : 0.0;
+    this.spriteVertex[4] = sprite.active ? sprite.v : 0.0;
 
     this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER,
                                 this.vertexBuffer);
@@ -44,7 +44,7 @@ export default class {
 
       if (!sprite.active) {
         sprite.spawn(x, y, z, u, v, controller, frames);
-        this.insertSprite(i, sprite);
+        this.updateSprite(i, sprite);
 
         return sprite;
       }
@@ -57,7 +57,7 @@ export default class {
 
       if (sprite.active) {
         if (sprite.update()) {
-          this.insertSprite(i, sprite);
+          this.updateSprite(i, sprite);
         }
       }
     }

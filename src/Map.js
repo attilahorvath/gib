@@ -1,6 +1,8 @@
 import map from '../assets/map.txt';
 import Gib from './Gib';
 import Rock from './enemies/Rock';
+import Propulsion from './items/Propulsion';
+import Elevation from './items/Elevation';
 
 export default class {
   constructor(renderer, spriteSheet, input, particleSystem) {
@@ -31,7 +33,7 @@ export default class {
         case 'R':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0,
-            new Rock(this, gib)
+            new Rock(this, gib, particleSystem)
           );
           break;
         case 'D':
@@ -43,6 +45,18 @@ export default class {
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, GIB_Z, 2.0, 0.0, gib,
             [[2.0, 0.0], [3.0, 0.0], [4.0, 0.0], [5.0, 0.0]]
+          );
+          break;
+        case 'P':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 1.0,
+            new Propulsion(this, gib, particleSystem)
+          );
+          break;
+        case 'E':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 3.0, 1.0,
+            new Elevation(this, gib, particleSystem)
           );
           break;
         }

@@ -1,5 +1,5 @@
 const MAX_PARTICLES = 128;
-const VERTEX_SIZE = 32;
+const VERTEX_SIZE = 36;
 
 export default class {
   constructor(renderer) {
@@ -17,7 +17,7 @@ export default class {
     this.time = 0;
   }
 
-  emitParticle(x, y, r, g, b, dx, dy) {
+  emitParticle(x, y, r, g, b, dx, dy, lifetime) {
     this.particleVertex[0] = x;
     this.particleVertex[1] = y;
     this.particleVertex[2] = r;
@@ -26,6 +26,7 @@ export default class {
     this.particleVertex[5] = dx;
     this.particleVertex[6] = dy;
     this.particleVertex[7] = this.time;
+    this.particleVertex[8] = lifetime;
 
     this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER,
                                 this.vertexBuffer);

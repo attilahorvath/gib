@@ -7,6 +7,7 @@ attribute vec2 vertex0Position;
 attribute vec3 vertex1Color;
 attribute vec2 vertex2Velocity;
 attribute float vertex3Emitted;
+attribute float vertex4Lifetime;
 
 varying vec4 color;
 
@@ -17,5 +18,5 @@ void main() {
   gl_PointSize = PARTICLE_SIZE;
   gl_Position = projection * view * vec4(position, PARTICLE_Z, 1.0);
 
-  color = vec4(vertex1Color, 1.0 - smoothstep(0.0, PARTICLE_LIFETIME, age));
+  color = vec4(vertex1Color, 1.0 - smoothstep(0.0, vertex4Lifetime, age));
 }

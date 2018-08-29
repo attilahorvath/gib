@@ -8,8 +8,20 @@ export default class extends SpriteController {
     this.input = input;
     this.particleSystem = particleSystem;
 
+    this.abilities = {
+      propulsion: false,
+      elevation: false
+    };
+
     this.direction = 0.0;
     this.lastDirection = 0.0;
+  }
+
+  init(sprite) {
+    super.init(sprite);
+
+    this.spawnX = this.x;
+    this.spawnY = this.y;
   }
 
   update() {
@@ -25,7 +37,7 @@ export default class extends SpriteController {
       this.ay = 0.002;
     }
 
-    if (this.input.pressed(LEFT)) {
+    if (this.input.pressed(LEFT) && this.abilities.propulsion) {
       if (this.ax > 0.0) {
         this.ax = 0.0;
       }
@@ -39,7 +51,7 @@ export default class extends SpriteController {
 
       this.direction = -1.0;
       this.lastDirection = 0.0;
-    } else if (this.input.pressed(RIGHT)) {
+    } else if (this.input.pressed(RIGHT) && this.abilities.propulsion) {
       if (this.ax < 0.0) {
         this.ax = 0.0;
       }
@@ -76,8 +88,9 @@ export default class extends SpriteController {
       this.ax = -0.002;
     }
 
-    if (this.input.justPressed(ACTION_A) && this.ay === 0.0) {
-      this.dy = -0.8;
+    if (this.input.justPressed(ACTION_A) && this.ay === 0.0 &&
+        this.abilities.elevation) {
+      this.dy = -0.9;
     }
 
     super.update();
@@ -99,6 +112,20 @@ export default class extends SpriteController {
                             SCREEN_HEIGHT / 2.0;
   }
 
+  respawn() {
+    this.x = this.spawnX;
+    this.y = this.spawnY;
+
+    this.ax = 0.0;
+    this.ay = 0.0;
+
+    this.vx = 0.0;
+    this.vy = 0.0;
+
+    this.direction = 0.0;
+    this.lastDirection = 0.0;
+  }
+
   kickUpDirt(x, tileType) {
     if (!tileType) {
       return;
@@ -116,7 +143,8 @@ export default class extends SpriteController {
       this.particleSystem.emitParticle(
         x, this.y + SPRITE_SIZE - 1,
         r, g, b,
-        direction * Math.random() * 0.25, -Math.random() * 0.25
+        direction * Math.random() * 0.25, -Math.random() * 0.25,
+        200.0
       );
     }
   }

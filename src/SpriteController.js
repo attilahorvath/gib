@@ -14,6 +14,10 @@ export default class {
     this.hitboxH = SPRITE_SIZE;
   }
 
+  init(sprite) {
+    this.sprite = sprite;
+  }
+
   get x() {
     return this.sprite.x;
   }

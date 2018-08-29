@@ -6,7 +6,7 @@ import ParticleSystem from './ParticleSystem';
 
 export default class {
   constructor() {
-    this.renderer = new Renderer();
+    this.renderer = new Renderer(this);
     this.input = new Input();
 
     this.spriteSheet = new SpriteSheet(this.renderer);
@@ -17,6 +17,8 @@ export default class {
 
     this.lastTimestamp = 0;
     this.timeAccumulator = 0;
+
+    this.started = false;
   }
 
   update(timestamp) {
@@ -26,12 +28,14 @@ export default class {
     this.timeAccumulator += deltaTime;
 
     while (this.timeAccumulator >= TIME_STEP) {
-      this.input.update();
+      if (this.started) {
+        this.input.update();
 
-      this.spriteSheet.update();
-      this.particleSystem.update();
+        this.spriteSheet.update();
+        this.particleSystem.update();
 
-      this.renderer.update();
+        this.renderer.update();
+      }
 
       this.timeAccumulator -= TIME_STEP;
     }

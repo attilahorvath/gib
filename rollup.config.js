@@ -18,7 +18,7 @@ export default {
 
       TIME_STEP: '(1000.0 / 60.0)',
 
-      SCREEN_WIDTH: '800.0',
+      SCREEN_WIDTH: '1024.0',
       SCREEN_HEIGHT: '600.0',
 
       SPRITE_SIZE: '64.0',
@@ -36,7 +36,6 @@ export default {
       ACTION_B: '0b1000000',
 
       PARTICLE_SIZE: '4.0',
-      PARTICLE_LIFETIME: '200.0',
 
       MAP_Z: '0.1',
       GIB_Z: '0.7',

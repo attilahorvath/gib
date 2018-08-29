@@ -23,7 +23,7 @@ export default class {
     this.v = v;
 
     if (controller) {
-      controller.sprite = this;
+      controller.init(this);
 
       this.controller = controller;
     }
@@ -54,6 +54,10 @@ export default class {
 
     if (this.frameTimer) {
       this.frameTimer.update();
+    }
+
+    if (!this.active) {
+      return true;
     }
 
     const changed = this.oldX !== this.x || this.oldY !== this.y ||
