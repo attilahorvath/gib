@@ -2,9 +2,10 @@ import SpriteController from "../SpriteController";
 import Timer from "../Timer";
 
 export default class extends SpriteController {
-  constructor(map, gib, particleSystem) {
+  constructor(renderer, map, gib, particleSystem) {
     super(map);
 
+    this.renderer = renderer;
     this.gib = gib;
     this.particleSystem = particleSystem;
 
@@ -38,9 +39,10 @@ export default class extends SpriteController {
     if (!this.fell) {
       this.timer.update();
 
-      if (!(this.gib.left - 15.0 > this.right ||
-            this.gib.right + 15.0 < this.left ||
-            this.gib.bottom < this.top) && !this.falling) {
+      if (!(this.gib.left - 50.0 > this.right ||
+            this.gib.right + 50.0 < this.left ||
+            this.gib.bottom < this.top ||
+            this.gib.top - 100.0 > this.bottom) && !this.falling) {
         this.timer.enabled = true;
       }
 
@@ -60,16 +62,19 @@ export default class extends SpriteController {
           this.falling = false;
           this.fell = true;
 
+          this.renderer.shake();
+
           for (let i = 0; i < 50; i++) {
             this.particleSystem.emitParticle(
-              this.left + this.hitboxW / 2.0, this.top + this.hitboxH / 2.0,
+              this.left + Math.random() * this.hitboxW,
+              this.top + Math.random() * this.hitboxH,
               0.86, 0.53, 0.33,
-              (Math.random() - 0.5) * 0.5, -Math.random() * 0.25,
+              (Math.random() - 0.5) * 0.25, -Math.random() * 0.125,
               700.0
             );
           }
         } else {
-          this.ay = 0.002;
+          this.ay = 0.007;
 
           if (!(this.gib.left > this.right || this.gib.right < this.left ||
             this.gib.top > this.bottom || this.gib.bottom < this.top)) {

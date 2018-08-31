@@ -3,6 +3,7 @@ import Gib from './Gib';
 import Rock from './enemies/Rock';
 import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
+import Excavation from './items/Excavation';
 
 export default class {
   constructor(renderer, spriteSheet, input, particleSystem) {
@@ -30,10 +31,14 @@ export default class {
         case '2':
           u = 1;
           break;
+        case 'B':
+          u = 1;
+          v = 1;
+          break;
         case 'R':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0,
-            new Rock(this, gib, particleSystem)
+            new Rock(renderer, this, gib, particleSystem)
           );
           break;
         case 'D':
@@ -50,13 +55,19 @@ export default class {
         case 'P':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 1.0,
-            new Propulsion(this, gib, particleSystem)
+            new Propulsion(renderer, this, gib, particleSystem)
           );
           break;
         case 'E':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 3.0, 1.0,
-            new Elevation(this, gib, particleSystem)
+            new Elevation(renderer, this, gib, particleSystem)
+          );
+          break;
+        case 'X':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 4.0, 1.0,
+            new Excavation(renderer, this, gib, particleSystem)
           );
           break;
         }

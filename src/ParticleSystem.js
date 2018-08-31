@@ -5,11 +5,8 @@ export default class {
   constructor(renderer) {
     this.renderer = renderer;
 
-    this.vertexBuffer = renderer.gl.createBuffer();
-    renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, this.vertexBuffer);
-    renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER,
-                           MAX_PARTICLES * VERTEX_SIZE,
-                           renderer.gl.STATIC_DRAW);
+    this.vertexBuffer = renderer.createVertexBuffer(MAX_PARTICLES *
+                                                    VERTEX_SIZE);
 
     this.particleVertex = new Float32Array(VERTEX_SIZE / FLOAT_SIZE);
     this.nextIndex = 0;
@@ -28,14 +25,8 @@ export default class {
     this.particleVertex[7] = this.time;
     this.particleVertex[8] = lifetime;
 
-    this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER,
-                                this.vertexBuffer);
-
-    this.renderer.gl.bufferSubData(
-      this.renderer.gl.ARRAY_BUFFER,
-      this.nextIndex * VERTEX_SIZE,
-      this.particleVertex
-    );
+    this.renderer.updateVertex(this.vertexBuffer, this.nextIndex * VERTEX_SIZE,
+      this.particleVertex);
 
     this.nextIndex = (this.nextIndex + 1) % MAX_PARTICLES;
   }
@@ -47,7 +38,7 @@ export default class {
   draw() {
     this.renderer.particleShader.time = this.time;
 
-    this.renderer.draw(this.renderer.particleShader, null,
-      this.vertexBuffer, null, MAX_PARTICLES, true);
+    this.renderer.draw(this.renderer.particleShader, this.vertexBuffer,
+                       MAX_PARTICLES);
   }
 }

@@ -1,9 +1,10 @@
 import SpriteController from "../SpriteController";
 
 export default class extends SpriteController {
-  constructor(map, gib, particleSystem) {
+  constructor(renderer, map, gib, particleSystem) {
     super(map);
 
+    this.renderer = renderer;
     this.gib = gib;
     this.particleSystem = particleSystem;
 
@@ -18,6 +19,7 @@ export default class extends SpriteController {
           this.gib.top > this.bottom || this.gib.bottom < this.top)) {
       this.collected();
       this.sprite.active = false;
+      this.renderer.shake();
 
       const count = 50;
 
@@ -26,7 +28,7 @@ export default class extends SpriteController {
 
         this.particleSystem.emitParticle(
           this.left + this.hitboxW / 2.0, this.top + this.hitboxH / 2.0,
-          0.67, 1.0, 0.93,
+          0.53, 0.0, 0.0,
           Math.cos(angle) * 0.2 + (Math.random() - 0.5) * 0.05,
           Math.sin(angle) * 0.2 + (Math.random() - 0.5) * 0.05,
           1000.0

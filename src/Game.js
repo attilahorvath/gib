@@ -3,6 +3,7 @@ import SpriteSheet from './SpriteSheet';
 import Map from './Map';
 import Input from './Input';
 import ParticleSystem from './ParticleSystem';
+import TextLayer from './TextLayer';
 
 export default class {
   constructor() {
@@ -11,6 +12,7 @@ export default class {
 
     this.spriteSheet = new SpriteSheet(this.renderer);
     this.particleSystem = new ParticleSystem(this.renderer);
+    this.textLayer = new TextLayer(this.renderer);
 
     this.map = new Map(this.renderer, this.spriteSheet, this.input,
                        this.particleSystem);
@@ -46,5 +48,6 @@ export default class {
 
     this.spriteSheet.draw();
     this.particleSystem.draw();
+    this.textLayer.draw();
   }
 }

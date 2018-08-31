@@ -7,10 +7,7 @@ export default class {
   constructor(renderer) {
     this.renderer = renderer;
 
-    this.vertexBuffer = renderer.gl.createBuffer();
-    renderer.gl.bindBuffer(renderer.gl.ARRAY_BUFFER, this.vertexBuffer);
-    renderer.gl.bufferData(renderer.gl.ARRAY_BUFFER, MAX_SPRITES * VERTEX_SIZE,
-                           renderer.gl.STATIC_DRAW);
+    this.vertexBuffer = renderer.createVertexBuffer(MAX_SPRITES * VERTEX_SIZE);
 
     this.spriteVertex = new Float32Array(VERTEX_SIZE / FLOAT_SIZE);
 
@@ -28,14 +25,8 @@ export default class {
     this.spriteVertex[3] = sprite.active ? sprite.u : 0.0;
     this.spriteVertex[4] = sprite.active ? sprite.v : 0.0;
 
-    this.renderer.gl.bindBuffer(this.renderer.gl.ARRAY_BUFFER,
-                                this.vertexBuffer);
-
-    this.renderer.gl.bufferSubData(
-      this.renderer.gl.ARRAY_BUFFER,
-      i * VERTEX_SIZE,
-      this.spriteVertex
-    );
+    this.renderer.updateVertex(this.vertexBuffer, i * VERTEX_SIZE,
+                               this.spriteVertex);
   }
 
   spawnSprite(x, y, z, u, v, controller = null, frames = null) {
@@ -64,7 +55,7 @@ export default class {
   }
 
   draw() {
-    this.renderer.draw(this.renderer.spriteShader, null,
-      this.vertexBuffer, null, MAX_SPRITES, true);
+    this.renderer.draw(this.renderer.spriteShader, this.vertexBuffer,
+                       MAX_SPRITES);
   }
 }

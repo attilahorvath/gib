@@ -10,7 +10,8 @@ export default class extends SpriteController {
 
     this.abilities = {
       propulsion: false,
-      elevation: false
+      elevation: false,
+      excavation: false
     };
 
     this.direction = 0.0;

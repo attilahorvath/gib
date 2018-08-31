@@ -4,7 +4,11 @@ import spriteFragmentShader from '../shaders/sprite.frag';
 import particleVertexShader from '../shaders/particle.vert';
 import particleFragmentShader from '../shaders/particle.frag';
 
+import textVertexShader from '../shaders/text.vert';
+import textFragmentShader from '../shaders/text.frag';
+
 import Shader from './Shader';
+import Timer from './Timer';
 
 export default class {
   constructor(game) {
@@ -27,6 +31,9 @@ export default class {
 
     this.particleShader = new Shader(this.gl, particleVertexShader,
                                      particleFragmentShader);
+
+    this.textShader = new Shader(this.gl, textVertexShader,
+                                 textFragmentShader);
 
     this.projection = new Float32Array([
       2.0 / SCREEN_WIDTH, 0.0, 0.0, 0.0,
@@ -55,6 +62,7 @@ export default class {
     this.setUpTexture();
 
     const image = new Image();
+
     image.addEventListener('load', () => {
       this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
       this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA,
@@ -64,8 +72,12 @@ export default class {
 
       game.started = true;
     });
+
     image.crossOrigin = '';
     image.src = 'TILES_TEXTURE';
+
+    this.shakeTimer = new Timer(200);
+    this.shakeTimer.enabled = false;
   }
 
   setUpTexture() {
@@ -79,42 +91,48 @@ export default class {
                           this.gl.NEAREST);
   }
 
-  tileTextureU(u) {
-    return (TILE_SIZE * u) / TILES_TEXTURE_WIDTH;
+  createVertexBuffer(size) {
+    const vertexBuffer = this.gl.createBuffer();
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, size, this.gl.STATIC_DRAW);
+
+    return vertexBuffer;
   }
 
-  tileTextureV(v) {
-    return (TILE_SIZE * v) / TILES_TEXTURE_HEIGHT;
+  updateVertex(vertexBuffer, index, vertex) {
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+
+    this.gl.bufferSubData(this.gl.ARRAY_BUFFER, index, vertex);
   }
 
   clear() {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
   }
 
-  update() {
-    this.view[12] = -Math.round(this.cameraX);
-    this.view[13] = -Math.round(this.cameraY);
+  shake() {
+    this.shakeTimer.reset();
   }
 
-  draw(shader, model, vertexBuffer, indexBuffer, count, points = false) {
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
+  update() {
+    this.shakeTimer.update();
 
-    if (indexBuffer) {
-      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    this.view[12] = -Math.round(this.cameraX);
+    this.view[13] = -Math.round(this.cameraY);
+
+    if (this.shakeTimer.enabled) {
+      this.view[12] += (Math.random() - 0.5) * 10;
+      this.view[13] += (Math.random() - 0.5) * 10;
     }
+  }
+
+  draw(shader, vertexBuffer, count) {
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
 
     shader.projection = this.projection;
     shader.view = this.view;
-    shader.model = model;
 
     shader.use();
 
-    const mode = points ? this.gl.POINTS : this.gl.TRIANGLES;
-
-    if (indexBuffer) {
-      this.gl.drawElements(mode, count, this.gl.UNSIGNED_SHORT, 0);
-    } else {
-      this.gl.drawArrays(mode, 0, count);
-    }
+    this.gl.drawArrays(this.gl.POINTS, 0, count);
   }
 }

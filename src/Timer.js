@@ -1,5 +1,5 @@
 export default class {
-  constructor(timeout, callback, repeating = false) {
+  constructor(timeout, callback = null, repeating = false) {
     this.timeout = timeout;
     this.callback = callback;
     this.repeating = repeating;
@@ -16,7 +16,9 @@ export default class {
     this.progress += TIME_STEP;
 
     if (this.progress >= this.timeout) {
-      this.callback();
+      if (this.callback) {
+        this.callback();
+      }
 
       if (this.repeating) {
         this.progress -= this.timeout;
@@ -24,5 +26,10 @@ export default class {
         this.enabled = false;
       }
     }
+  }
+
+  reset() {
+    this.enabled = true;
+    this.progress = 0;
   }
 }

@@ -26,7 +26,7 @@ export default {
       TILE_SIZE: '16.0',
       TILES_TEXTURE: 'textures/tiles.png',
       TILES_TEXTURE_WIDTH: '128.0',
-      TILES_TEXTURE_HEIGHT: '32.0',
+      TILES_TEXTURE_HEIGHT: '64.0',
 
       UP:       '0b0000001',
       DOWN:     '0b0000010',
@@ -37,10 +37,14 @@ export default {
 
       PARTICLE_SIZE: '4.0',
 
+      FONT_SIZE: '8.0',
+      FONT_TEXTURE_OFFSET: '32.0',
+
       MAP_Z: '0.1',
       GIB_Z: '0.7',
       DECAL_Z: '0.8',
       PARTICLE_Z: '0.9',
+      TEXT_Z: '0.95',
 
       FLOAT_SIZE: '4'
     }),
