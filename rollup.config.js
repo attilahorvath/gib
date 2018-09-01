@@ -46,7 +46,10 @@ export default {
       PARTICLE_Z: '0.9',
       TEXT_Z: '0.95',
 
-      FLOAT_SIZE: '4'
+      FLOAT_SIZE: '4',
+
+      TEXT_FLASHING: '0',
+      TEXT_ANIMATED: '1'
     }),
     string({
       include: 'assets/**/*.txt'

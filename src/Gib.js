@@ -23,6 +23,9 @@ export default class extends SpriteController {
 
     this.spawnX = this.x;
     this.spawnY = this.y;
+
+    this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 - SCREEN_WIDTH / 2.0;
+    this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 - SCREEN_HEIGHT / 2.0;
   }
 
   update() {
@@ -44,7 +47,7 @@ export default class extends SpriteController {
       }
 
       if (!this.tileAt(-1.0, 0.0)) {
-        this.ax -= 0.0001;
+        this.ax -= 0.001;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
@@ -58,7 +61,7 @@ export default class extends SpriteController {
       }
 
       if (!this.tileAt(1.0, 0.0)) {
-        this.ax += 0.0001;
+        this.ax += 0.001;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
@@ -106,11 +109,8 @@ export default class extends SpriteController {
     this.sprite.frameTimer.enabled = this.direction !== 0.0;
     this.sprite.frameDirection = Math.sign(this.direction);
 
-    this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 -
-                            SCREEN_WIDTH / 2.0;
-
-    this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 -
-                            SCREEN_HEIGHT / 2.0;
+    this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 - SCREEN_WIDTH / 2.0;
+    this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 - SCREEN_HEIGHT / 2.0;
   }
 
   respawn() {

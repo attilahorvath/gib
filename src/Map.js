@@ -6,7 +6,7 @@ import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
 
 export default class {
-  constructor(renderer, spriteSheet, input, particleSystem) {
+  constructor(renderer, spriteSheet, input, particleSystem, textLayer, speech) {
     const gib = new Gib(renderer, this, input, particleSystem);
 
     this.tiles = [];
@@ -55,19 +55,22 @@ export default class {
         case 'P':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 1.0,
-            new Propulsion(renderer, this, gib, particleSystem)
+            new Propulsion(renderer, this, gib, particleSystem, textLayer,
+                           speech)
           );
           break;
         case 'E':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 3.0, 1.0,
-            new Elevation(renderer, this, gib, particleSystem)
+            new Elevation(renderer, this, gib, particleSystem, textLayer,
+                          speech)
           );
           break;
         case 'X':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 4.0, 1.0,
-            new Excavation(renderer, this, gib, particleSystem)
+            new Excavation(renderer, this, gib, particleSystem, textLayer,
+                           speech)
           );
           break;
         }

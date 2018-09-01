@@ -1,12 +1,14 @@
 import SpriteController from "../SpriteController";
 
 export default class extends SpriteController {
-  constructor(renderer, map, gib, particleSystem) {
+  constructor(renderer, map, gib, particleSystem, textLayer, speech) {
     super(map);
 
     this.renderer = renderer;
     this.gib = gib;
     this.particleSystem = particleSystem;
+    this.textLayer = textLayer;
+    this.speech = speech;
 
     this.hitboxX = 12.0;
     this.hitboxY = 24.0;

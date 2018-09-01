@@ -70,7 +70,7 @@ export default class {
 
       this.setUpTexture();
 
-      game.started = true;
+      game.loaded = true;
     });
 
     image.crossOrigin = '';

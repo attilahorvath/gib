@@ -1,9 +1,11 @@
 import Renderer from './Renderer';
-import SpriteSheet from './SpriteSheet';
-import Map from './Map';
 import Input from './Input';
+import SpriteSheet from './SpriteSheet';
 import ParticleSystem from './ParticleSystem';
 import TextLayer from './TextLayer';
+import Speech from './Speech';
+import Map from './Map';
+import Title from './Title';
 
 export default class {
   constructor() {
@@ -13,14 +15,17 @@ export default class {
     this.spriteSheet = new SpriteSheet(this.renderer);
     this.particleSystem = new ParticleSystem(this.renderer);
     this.textLayer = new TextLayer(this.renderer);
+    this.speech = new Speech();
 
     this.map = new Map(this.renderer, this.spriteSheet, this.input,
-                       this.particleSystem);
+                       this.particleSystem, this.textLayer, this.speech);
+
+    this.title = new Title(this.input, this.textLayer, this.speech);
 
     this.lastTimestamp = 0;
     this.timeAccumulator = 0;
 
-    this.started = false;
+    this.loaded = false;
   }
 
   update(timestamp) {
@@ -30,11 +35,17 @@ export default class {
     this.timeAccumulator += deltaTime;
 
     while (this.timeAccumulator >= TIME_STEP) {
-      if (this.started) {
+      if (this.loaded) {
         this.input.update();
 
-        this.spriteSheet.update();
+        if (!this.title.started) {
+          this.title.update();
+        } else {
+          this.spriteSheet.update();
+        }
+
         this.particleSystem.update();
+        this.textLayer.update();
 
         this.renderer.update();
       }
