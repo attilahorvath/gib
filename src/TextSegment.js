@@ -99,6 +99,12 @@ export default class {
   hide() {
     this.visible = false;
 
+    for (const char of this.chars) {
+      char.size = 0;
+
+      this.textLayer.updateChar(char);
+    }
+
     if (this.startTimer) {
       this.startTimer.enabled = false;
     }

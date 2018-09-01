@@ -12,8 +12,24 @@ export default class {
     this.charVertex = new Float32Array(VERTEX_SIZE / FLOAT_SIZE);
     this.nextIndex = 0;
 
-    this.titleText = null;
-    this.helpText = null;
+    this.title = null;
+    this.help = null;
+  }
+
+  set titleText(text) {
+    if (this.title) {
+      this.title.hide();
+    }
+
+    this.title = text;
+  }
+
+  set helpText(text) {
+    if (this.help) {
+      this.help.hide();
+    }
+
+    this.help = text;
   }
 
   updateChar(char) {
@@ -73,12 +89,12 @@ export default class {
   }
 
   update() {
-    if (this.titleText) {
-      this.titleText.update();
+    if (this.title) {
+      this.title.update();
     }
 
-    if (this.helpText) {
-      this.helpText.update();
+    if (this.help) {
+      this.help.update();
     }
   }
 

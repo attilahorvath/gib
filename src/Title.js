@@ -24,8 +24,8 @@ export default class {
     }
 
     if (this.input.justPressed(ACTION_A)) {
-      this.textLayer.titleText.hide();
-      this.textLayer.helpText.hide();
+      this.textLayer.titleText = null;
+      this.textLayer.helpText = null;
 
       this.started = true;
     }

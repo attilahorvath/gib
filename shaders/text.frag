@@ -2,9 +2,14 @@ precision highp float;
 
 uniform sampler2D tex;
 
+varying float size;
 varying vec2 texCoord;
 
 void main() {
+  if (size < 0.1) {
+    discard;
+  }
+
   vec2 texCoord = mix(
     texCoord,
     texCoord + vec2(FONT_SIZE / TILES_TEXTURE_WIDTH,

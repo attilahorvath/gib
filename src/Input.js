@@ -16,6 +16,26 @@ const KEY_J = 'KeyJ';
 
 const KEY_SPACE = 'Space';
 
+const keyCodeMapping = {
+  38: KEY_UP,
+  40: KEY_DOWN,
+  37: KEY_LEFT,
+  39: KEY_RIGHT,
+
+  87: KEY_W,
+  65: KEY_A,
+  83: KEY_S,
+  68: KEY_D,
+
+  88: KEY_X,
+  90: KEY_Z,
+
+  75: KEY_K,
+  74: KEY_J,
+
+  32: KEY_SPACE
+};
+
 export default class {
   constructor() {
     this.keysPressed = 0;
@@ -24,7 +44,9 @@ export default class {
     this.keysJustReleased = 0;
 
     addEventListener("keydown", event => {
-      switch (event.code) {
+      const code = event.code || keyCodeMapping[event.keyCode];
+
+      switch (code) {
       case KEY_UP: case KEY_W:
         this.keysPressed |= UP;
         event.preventDefault();
@@ -53,7 +75,9 @@ export default class {
     });
 
     addEventListener("keyup", event => {
-      switch (event.code) {
+      const code = event.code || keyCodeMapping[event.keyCode];
+
+      switch (code) {
       case KEY_UP: case KEY_W:
         this.keysPressed &= ~UP;
         event.preventDefault();
