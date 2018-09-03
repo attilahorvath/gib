@@ -38,7 +38,7 @@ export default {
       PARTICLE_SIZE: '4.0',
 
       FONT_SIZE: '8.0',
-      FONT_TEXTURE_OFFSET: '32.0',
+      FONT_TEXTURE_OFFSET: '48.0',
 
       MAP_Z: '0.1',
       GIB_Z: '0.7',

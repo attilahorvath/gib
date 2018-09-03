@@ -3,6 +3,7 @@ import Timer from "./Timer";
 export default class {
   constructor() {
     this.active = false;
+    this.inactivate = false;
 
     this.x = 0.0;
     this.y = 0.0;
@@ -21,6 +22,13 @@ export default class {
 
     this.u = u;
     this.v = v;
+
+    this.oldX = this.x;
+    this.oldY = this.y;
+    this.oldZ = this.z;
+
+    this.oldU = this.u;
+    this.oldV = this.v;
 
     if (controller) {
       controller.init(this);
@@ -56,8 +64,20 @@ export default class {
       this.frameTimer.update();
     }
 
+    if (this.inactivate) {
+      this.active = false;
+      this.inactivate = false;
+    }
+
     if (!this.active) {
-      return true;
+      this.x = 0.0;
+      this.y = 0.0;
+      this.z = 0.0;
+
+      this.u = 0.0;
+      this.v = 0.0;
+
+      this.controller = null;
     }
 
     const changed = this.oldX !== this.x || this.oldY !== this.y ||
@@ -72,5 +92,9 @@ export default class {
     this.oldV = this.v;
 
     return changed;
+  }
+
+  disable() {
+    this.inactivate = true;
   }
 }

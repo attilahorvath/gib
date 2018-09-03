@@ -12,6 +12,10 @@ export default class {
     this.hitboxY = 0.0;
     this.hitboxW = SPRITE_SIZE;
     this.hitboxH = SPRITE_SIZE;
+
+    this.maxDx = 0.5;
+
+    this.ignoreCollisions = false;
   }
 
   init(sprite) {
@@ -54,10 +58,10 @@ export default class {
     this.dx += this.ax * TIME_STEP;
     this.dy += this.ay * TIME_STEP;
 
-    if (this.dx > 0.5) {
-      this.dx = 0.5;
-    } else if (this.dx < -0.5) {
-      this.dx = -0.5;
+    if (this.dx > this.maxDx) {
+      this.dx = this.maxDx;
+    } else if (this.dx < -this.maxDx) {
+      this.dx = -this.maxDx;
     }
 
     if (this.dy > 2.0) {
@@ -68,7 +72,7 @@ export default class {
 
     this.x += this.dx * TIME_STEP;
 
-    if (this.tileAt()) {
+    if (!this.ignoreCollisions && this.tileAt()) {
       if (this.dx < 0) {
         this.x += this.map.prevTileOffset(this.left);
       } else {
@@ -78,7 +82,7 @@ export default class {
 
     this.y += this.dy * TIME_STEP;
 
-    if (this.tileAt()) {
+    if (!this.ignoreCollisions && this.tileAt()) {
       if (this.dy < 0) {
         this.y += this.map.prevTileOffset(this.top);
       } else {

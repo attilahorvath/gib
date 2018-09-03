@@ -1,13 +1,18 @@
 import map from '../assets/map.txt';
 import Gib from './Gib';
+import Brick from './Brick';
 import Rock from './enemies/Rock';
+import Worm from './enemies/Worm';
 import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
+import Extermination from './items/Extermination';
 
 export default class {
-  constructor(renderer, spriteSheet, input, particleSystem, textLayer, speech) {
-    const gib = new Gib(renderer, this, input, particleSystem);
+  constructor(game, renderer, spriteSheet, input, particleSystem, textLayer,
+              speech) {
+    const gib = new Gib(game, renderer, this, spriteSheet, input,
+                        particleSystem, textLayer, speech);
 
     this.tiles = [];
 
@@ -23,6 +28,7 @@ export default class {
 
         let u = null;
         let v = 0;
+        let controller = null;
 
         switch (type) {
         case '1':
@@ -34,11 +40,26 @@ export default class {
         case 'B':
           u = 1;
           v = 1;
+          controller = new Brick(this, particleSystem);
           break;
         case 'R':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0,
             new Rock(renderer, this, gib, particleSystem)
+          );
+          break;
+        case 'W':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 0.0,
+            new Worm(renderer, this, gib, particleSystem)
+          );
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x - 47, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
+            new Worm(renderer, this, gib, particleSystem)
+          );
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x - 94, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
+            new Worm(renderer, this, gib, particleSystem)
           );
           break;
         case 'D':
@@ -73,6 +94,13 @@ export default class {
                            speech)
           );
           break;
+        case 'L':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 5.0, 1.0,
+            new Extermination(renderer, this, gib, particleSystem, textLayer,
+                              speech)
+          );
+          break;
         }
 
         if (u === null) {
@@ -82,10 +110,10 @@ export default class {
         }
 
         spriteSheet.spawnSprite(
-          SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, u, v
+          SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, u, v, controller
         );
 
-        this.tiles[y].push(type);
+        this.tiles[y].push(controller || type);
       }
     }
   }
@@ -98,6 +126,16 @@ export default class {
     }
 
     return row[Math.floor(x / SPRITE_SIZE)];
+  }
+
+  setTileAt(x, y, type) {
+    const row = this.tiles[Math.floor(y / SPRITE_SIZE)];
+
+    if (!row) {
+      return;
+    }
+
+    row[Math.floor(x / SPRITE_SIZE)] = type;
   }
 
   prevTileOffset(x) {

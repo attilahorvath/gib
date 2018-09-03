@@ -20,7 +20,7 @@ export default class extends SpriteController {
     if (!(this.gib.left > this.right || this.gib.right < this.left ||
           this.gib.top > this.bottom || this.gib.bottom < this.top)) {
       this.collected();
-      this.sprite.active = false;
+      this.sprite.disable();
       this.renderer.shake();
 
       const count = 50;

@@ -6,6 +6,7 @@ import TextLayer from './TextLayer';
 import Speech from './Speech';
 import Map from './Map';
 import Title from './Title';
+import GameOver from './GameOver';
 
 export default class {
   constructor() {
@@ -17,8 +18,7 @@ export default class {
     this.textLayer = new TextLayer(this.renderer);
     this.speech = new Speech();
 
-    this.map = new Map(this.renderer, this.spriteSheet, this.input,
-                       this.particleSystem, this.textLayer, this.speech);
+    this.load();
 
     this.title = new Title(this.input, this.textLayer, this.speech);
 
@@ -26,6 +26,13 @@ export default class {
     this.timeAccumulator = 0;
 
     this.loaded = false;
+  }
+
+  load() {
+    this.spriteSheet.reset();
+
+    this.map = new Map(this, this.renderer, this.spriteSheet, this.input,
+                       this.particleSystem, this.textLayer, this.speech);
   }
 
   update(timestamp) {
@@ -60,5 +67,9 @@ export default class {
     this.spriteSheet.draw();
     this.particleSystem.draw();
     this.textLayer.draw();
+  }
+
+  over() {
+    this.title = new GameOver(this, this.input, this.textLayer, this.speech);
   }
 }

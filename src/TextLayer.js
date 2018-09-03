@@ -14,6 +14,8 @@ export default class {
 
     this.title = null;
     this.help = null;
+
+    this.lives = null;
   }
 
   set titleText(text) {
@@ -30,6 +32,14 @@ export default class {
     }
 
     this.help = text;
+  }
+
+  set livesText(text) {
+    if (this.lives) {
+      this.lives.hide();
+    }
+
+    this.lives = text;
   }
 
   updateChar(char) {
@@ -56,6 +66,12 @@ export default class {
     } else if (charCode >= 'Q'.charCodeAt(0) && charCode <= 'Z'.charCodeAt(0)) {
       u = (char.charCodeAt(0) - 'Q'.charCodeAt(0)) *
           FONT_SIZE / TILES_TEXTURE_WIDTH;
+      v = (FONT_TEXTURE_OFFSET + FONT_SIZE) / TILES_TEXTURE_HEIGHT;
+    } else if (char === '<') {
+      u = 10 * FONT_SIZE / TILES_TEXTURE_WIDTH;
+      v = (FONT_TEXTURE_OFFSET + FONT_SIZE) / TILES_TEXTURE_HEIGHT;
+    } else if (char === '/') {
+      u = 11 * FONT_SIZE / TILES_TEXTURE_WIDTH;
       v = (FONT_TEXTURE_OFFSET + FONT_SIZE) / TILES_TEXTURE_HEIGHT;
     }
 
@@ -95,6 +111,10 @@ export default class {
 
     if (this.help) {
       this.help.update();
+    }
+
+    if (this.lives) {
+      this.lives.update();
     }
   }
 

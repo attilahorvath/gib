@@ -78,6 +78,7 @@ export default class {
 
     this.shakeTimer = new Timer(200);
     this.shakeTimer.enabled = false;
+    this.shakeIntensity = 10;
   }
 
   setUpTexture() {
@@ -109,7 +110,8 @@ export default class {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
   }
 
-  shake() {
+  shake(intensity = 10) {
+    this.shakeIntensity = intensity;
     this.shakeTimer.reset();
   }
 
@@ -120,8 +122,8 @@ export default class {
     this.view[13] = -Math.round(this.cameraY);
 
     if (this.shakeTimer.enabled) {
-      this.view[12] += (Math.random() - 0.5) * 10;
-      this.view[13] += (Math.random() - 0.5) * 10;
+      this.view[12] += (Math.random() - 0.5) * this.shakeIntensity;
+      this.view[13] += (Math.random() - 0.5) * this.shakeIntensity;
     }
   }
 

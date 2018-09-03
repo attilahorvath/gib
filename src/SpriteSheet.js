@@ -58,4 +58,11 @@ export default class {
     this.renderer.draw(this.renderer.spriteShader, this.vertexBuffer,
                        MAX_SPRITES);
   }
+
+  reset() {
+    for (const sprite of this.sprites) {
+      sprite.disable();
+      sprite.update();
+    }
+  }
 }

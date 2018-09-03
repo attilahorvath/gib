@@ -1,40 +1,67 @@
 import SpriteController from "./SpriteController";
+import Timer from "./Timer";
+import Laser from "./Laser";
 
 export default class extends SpriteController {
-  constructor(renderer, map, input, particleSystem) {
+  constructor(game, renderer, map, spriteSheet, input, particleSystem,
+              textLayer, speech) {
     super(map);
 
+    this.game = game;
     this.renderer = renderer;
+    this.spriteSheet = spriteSheet;
     this.input = input;
     this.particleSystem = particleSystem;
+    this.textLayer = textLayer;
+    this.speech = speech;
 
     this.abilities = {
       propulsion: false,
       elevation: false,
-      excavation: false
+      excavation: false,
+      extermination: false
     };
+
+    this.loaded = false;
 
     this.direction = 0.0;
     this.lastDirection = 0.0;
+
+    this.facing = RIGHT;
+
+    this.lives = 3;
+    this.invincible = false;
+
+    this.invincibilityTimer = new Timer(2500, () => {
+      this.invincible = false;
+    });
+
+    this.invincibilityTimer.enabled = false;
   }
 
   init(sprite) {
     super.init(sprite);
-
-    this.spawnX = this.x;
-    this.spawnY = this.y;
 
     this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 - SCREEN_WIDTH / 2.0;
     this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 - SCREEN_HEIGHT / 2.0;
   }
 
   update() {
+    if (!this.loaded) {
+      this.updateLives();
+
+      this.loaded = true;
+    }
+
+    const tileLeft = this.tileAt(-1.0, 0.0);
+    const tileRight = this.tileAt(1.0, 0.0);
+    const tileAbove = this.tileAt(0.0, -1.0);
     const tileBelow = this.tileAt(0.0, 1.0);
 
     if (tileBelow) {
       this.ay = 0.0;
       this.dy = 0.0;
-    } else if (this.tileAt(0.0, -1.0)) {
+    } else if (tileAbove) {
       this.ay = 0.002;
       this.dy = 0.0;
     } else {
@@ -46,29 +73,47 @@ export default class extends SpriteController {
         this.ax = 0.0;
       }
 
-      if (!this.tileAt(-1.0, 0.0)) {
+      if (!tileLeft) {
         this.ax -= 0.001;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
+
+        if (this.abilities.excavation && this.input.pressed(ACTION_B) &&
+            tileLeft.drill) {
+          tileLeft.drill();
+          this.drill(LEFT);
+          this.renderer.shake(5);
+        }
       }
 
       this.direction = -1.0;
       this.lastDirection = 0.0;
+
+      this.facing = LEFT;
     } else if (this.input.pressed(RIGHT) && this.abilities.propulsion) {
       if (this.ax < 0.0) {
         this.ax = 0.0;
       }
 
-      if (!this.tileAt(1.0, 0.0)) {
+      if (!tileRight) {
         this.ax += 0.001;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
+
+        if (this.abilities.excavation && this.input.pressed(ACTION_B) &&
+            tileRight.drill) {
+          tileRight.drill();
+          this.drill(RIGHT);
+          this.renderer.shake(5);
+        }
       }
 
       this.direction = 1.0;
       this.lastDirection = 0.0;
+
+      this.facing = RIGHT;
     } else {
       if (this.direction !== 0.0) {
         this.ax = -this.ax;
@@ -79,11 +124,31 @@ export default class extends SpriteController {
 
       if ((this.lastDirection > 0.0 && this.dx < 0.001) ||
           (this.lastDirection < 0.0 && this.dx > 0.001) ||
-          this.tileAt(-1.0, 0.0) ||
-          this.tileAt(1.0, 0.0)) {
+          tileLeft || tileRight) {
         this.dx = 0.0;
         this.ax = 0.0;
       }
+
+      if (this.abilities.excavation && this.input.pressed(UP) &&
+          this.input.pressed(ACTION_B) && tileAbove && tileAbove.drill) {
+        tileAbove.drill();
+        this.drill(UP);
+        this.renderer.shake(5);
+      } else if (this.abilities.excavation && this.input.pressed(DOWN) &&
+                 this.input.pressed(ACTION_B) && tileBelow && tileBelow.drill) {
+        tileBelow.drill();
+        this.drill(DOWN);
+        this.renderer.shake(5);
+      }
+    }
+
+    if (this.abilities.extermination && this.input.justPressed(ACTION_B)) {
+      const xOffset = this.facing === RIGHT ? 0 : -40;
+
+      this.spriteSheet.spawnSprite(
+        this.x + this.hitboxW / 2 + xOffset, this.y, MAP_Z, 0.0, 2.0,
+        new Laser(this.map, this.facing, this.particleSystem)
+      );
     }
 
     if (this.ax > 0.002) {
@@ -111,20 +176,98 @@ export default class extends SpriteController {
 
     this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 - SCREEN_WIDTH / 2.0;
     this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 - SCREEN_HEIGHT / 2.0;
+
+    this.invincibilityTimer.update();
   }
 
-  respawn() {
-    this.x = this.spawnX;
-    this.y = this.spawnY;
+  updateLives() {
+    let text = '';
 
-    this.ax = 0.0;
-    this.ay = 0.0;
+    for (let i = 0; i < 3; i++) {
+      text += this.lives > i ? '<' : '/';
+    }
 
-    this.vx = 0.0;
-    this.vy = 0.0;
+    this.textLayer.livesText = this.textLayer.createSegment(10, 10, text, 32);
+  }
 
-    this.direction = 0.0;
-    this.lastDirection = 0.0;
+  damage() {
+    if (this.invincible) {
+      return;
+    }
+
+    this.invincible = true;
+    this.invincibilityTimer.reset();
+
+    this.lives--;
+    this.updateLives();
+
+    if (this.lives === 1) {
+      this.speech.speak('WARNING! DAMAGE CRITICAL!');
+    }
+
+    this.renderer.shake();
+
+    if (this.lives === 0) {
+      this.game.over();
+    }
+  }
+
+  drill(direction) {
+    const count = Math.random() * 30;
+
+    let x = 0;
+    let y = 0;
+
+    switch (direction) {
+    case UP:
+      x = this.x + SPRITE_SIZE / 2;
+      y = this.y;
+      break;
+    case DOWN:
+      x = this.x + SPRITE_SIZE / 2;
+      y = this.y + SPRITE_SIZE;
+      break;
+    case LEFT:
+      x = this.x;
+      y = this.y + SPRITE_SIZE / 2;
+      break;
+    case RIGHT:
+      x = this.x + SPRITE_SIZE;
+      y = this.y + SPRITE_SIZE / 2;
+      break;
+    }
+
+    for (let i = 0; i < count; i++) {
+      let dx = 0.0;
+      let dy = 0.0;
+
+      switch (direction) {
+      case UP:
+        dx = Math.random() * 0.5 - 0.25;
+        dy = Math.random() * 0.25;
+        break;
+      case DOWN:
+        dx = Math.random() * 0.5 - 0.25;
+        dy = -Math.random() * 0.25;
+        break;
+      case LEFT:
+        dx = Math.random() * 0.25;
+        dy = Math.random() * 0.5 - 0.25;
+        break;
+      case RIGHT:
+        dx = -Math.random() * 0.25;
+        dy = Math.random() * 0.5 - 0.25;
+        break;
+      }
+
+      const type = Math.random() < 0.75;
+
+      const r = type ? 1.0 : 0.93;
+      const g = type ? 0.46 : 0.93;
+      const b = 0.46;
+
+      this.particleSystem.emitParticle(x, y, r, g, b, dx, dy, 300.0);
+    }
   }
 
   kickUpDirt(x, tileType) {
