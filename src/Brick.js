@@ -1,9 +1,10 @@
 import SpriteController from "./SpriteController";
 
 export default class extends SpriteController {
-  constructor(map, particleSystem) {
+  constructor(renderer, map, particleSystem) {
     super(map);
 
+    this.renderer = renderer;
     this.particleSystem = particleSystem;
 
     this.ignoreCollisions = true;
@@ -30,6 +31,8 @@ export default class extends SpriteController {
           700.0
         );
       }
+
+      this.renderer.shake(20);
 
       this.sprite.disable();
       this.map.setTileAt(this.x, this.y, null);

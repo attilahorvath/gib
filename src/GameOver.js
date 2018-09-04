@@ -5,12 +5,12 @@ export default class {
     this.textLayer = textLayer;
     this.speech = speech;
 
-    textLayer.titleText = textLayer.createSegment(
-      250, 50, 'CRITICAL\nMISSION\nFAILURE', 64, TEXT_ANIMATED
+    textLayer.titleText = textLayer.createCenteredSegment(
+      50, 'CRITICAL\nMISSION\nFAILURE', 64, TEXT_ANIMATED
     );
 
-    textLayer.helpText = textLayer.createSegment(
-      120, 500, 'PRESS START TO TRY AGAIN', 32, TEXT_FLASHING, 2000
+    textLayer.helpText = textLayer.createCenteredSegment(
+      500, 'PRESS START TO TRY AGAIN', 32, TEXT_FLASHING, 2000
     );
 
     this.speech.speak('CRITICAL MISSION FAILURE!');

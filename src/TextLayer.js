@@ -104,6 +104,22 @@ export default class {
     return new TextSegment(this, chars, size, style, timeOffset, timeout);
   }
 
+  createCenteredSegment(y, string, size, style, timeOffset, timeout) {
+    let maxWidth = 0;
+
+    for (const line of string.split('\n')) {
+      const width = line.length * size;
+
+      if (width > maxWidth) {
+        maxWidth = width;
+      }
+    }
+
+    const x = SCREEN_WIDTH / 2 - maxWidth / 2;
+
+    return this.createSegment(x, y, string, size, style, timeOffset, timeout);
+  }
+
   update() {
     if (this.title) {
       this.title.update();

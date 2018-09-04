@@ -1,12 +1,13 @@
 import SpriteController from "../SpriteController";
 
 export default class extends SpriteController {
-  constructor(renderer, map, gib, particleSystem) {
+  constructor(renderer, map, gib, particleSystem, parent) {
     super(map);
 
     this.renderer = renderer;
     this.gib = gib;
     this.particleSystem = particleSystem;
+    this.parent = parent;
 
     this.hitboxX = 8.0;
     this.hitboxY = 8.0;
@@ -72,6 +73,24 @@ export default class extends SpriteController {
     if (!(this.gib.left > this.right || this.gib.right < this.left ||
       this.gib.top > this.bottom || this.gib.bottom < this.top)) {
       this.gib.damage();
+    }
+  }
+
+  laserHit() {
+    return this.parent.laserHit();
+  }
+
+  explode() {
+    this.sprite.disable();
+
+    for (let i = 0; i < 50; i++) {
+      this.particleSystem.emitParticle(
+        this.left + Math.random() * this.hitboxW,
+        this.top + Math.random() * this.hitboxH,
+        0.0, 0.8, 0.33,
+        (Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.25,
+        200.0
+      );
     }
   }
 }

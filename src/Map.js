@@ -2,7 +2,7 @@ import map from '../assets/map.txt';
 import Gib from './Gib';
 import Brick from './Brick';
 import Rock from './enemies/Rock';
-import Worm from './enemies/Worm';
+import WormHead from './enemies/WormHead';
 import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
@@ -40,7 +40,7 @@ export default class {
         case 'B':
           u = 1;
           v = 1;
-          controller = new Brick(this, particleSystem);
+          controller = new Brick(renderer, this, particleSystem);
           break;
         case 'R':
           spriteSheet.spawnSprite(
@@ -51,16 +51,16 @@ export default class {
         case 'W':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 0.0,
-            new Worm(renderer, this, gib, particleSystem)
+            new WormHead(renderer, this, spriteSheet, gib, particleSystem)
           );
-          spriteSheet.spawnSprite(
-            SPRITE_SIZE * x - 47, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
-            new Worm(renderer, this, gib, particleSystem)
-          );
-          spriteSheet.spawnSprite(
-            SPRITE_SIZE * x - 94, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
-            new Worm(renderer, this, gib, particleSystem)
-          );
+          // spriteSheet.spawnSprite(
+          //   SPRITE_SIZE * x - 47, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
+          //   new Worm(renderer, this, gib, particleSystem)
+          // );
+          // spriteSheet.spawnSprite(
+          //   SPRITE_SIZE * x - 94, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
+          //   new Worm(renderer, this, gib, particleSystem)
+          // );
           break;
         case 'D':
           spriteSheet.spawnSprite(

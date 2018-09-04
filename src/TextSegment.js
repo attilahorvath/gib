@@ -16,7 +16,7 @@ export default class {
 
       this.nextChar = 0;
 
-      this.timer = new Timer(100, () => {
+      this.timer = new Timer(70, () => {
         if (this.nextChar >= this.chars.length) {
           this.timer.enabled = false;
         } else {

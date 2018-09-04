@@ -32,7 +32,7 @@ export default class extends SpriteController {
     this.lives = 3;
     this.invincible = false;
 
-    this.invincibilityTimer = new Timer(2500, () => {
+    this.invincibilityTimer = new Timer(500, () => {
       this.invincible = false;
     });
 
@@ -81,9 +81,9 @@ export default class extends SpriteController {
 
         if (this.abilities.excavation && this.input.pressed(ACTION_B) &&
             tileLeft.drill) {
-          tileLeft.drill();
-          this.drill(LEFT);
           this.renderer.shake(5);
+          this.drill(LEFT);
+          tileLeft.drill();
         }
       }
 
@@ -104,9 +104,9 @@ export default class extends SpriteController {
 
         if (this.abilities.excavation && this.input.pressed(ACTION_B) &&
             tileRight.drill) {
-          tileRight.drill();
-          this.drill(RIGHT);
           this.renderer.shake(5);
+          this.drill(RIGHT);
+          tileRight.drill();
         }
       }
 
@@ -131,14 +131,14 @@ export default class extends SpriteController {
 
       if (this.abilities.excavation && this.input.pressed(UP) &&
           this.input.pressed(ACTION_B) && tileAbove && tileAbove.drill) {
-        tileAbove.drill();
-        this.drill(UP);
         this.renderer.shake(5);
+        this.drill(UP);
+        tileAbove.drill();
       } else if (this.abilities.excavation && this.input.pressed(DOWN) &&
                  this.input.pressed(ACTION_B) && tileBelow && tileBelow.drill) {
-        tileBelow.drill();
-        this.drill(DOWN);
         this.renderer.shake(5);
+        this.drill(DOWN);
+        tileBelow.drill();
       }
     }
 
@@ -147,7 +147,7 @@ export default class extends SpriteController {
 
       this.spriteSheet.spawnSprite(
         this.x + this.hitboxW / 2 + xOffset, this.y, MAP_Z, 0.0, 2.0,
-        new Laser(this.map, this.facing, this.particleSystem)
+        new Laser(this.map, this.facing, this.spriteSheet, this.particleSystem)
       );
     }
 

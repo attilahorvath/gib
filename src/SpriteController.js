@@ -97,4 +97,8 @@ export default class {
            this.map.tileAt(this.right + xOffset, this.top + yOffset) ||
            this.map.tileAt(this.right + xOffset, this.bottom + yOffset);
   }
+
+  laserHit() {
+    return false;
+  }
 }
