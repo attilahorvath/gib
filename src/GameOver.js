@@ -1,3 +1,5 @@
+import Timer from "./Timer";
+
 export default class {
   constructor(game, input, textLayer, speech) {
     this.game = game;
@@ -16,10 +18,14 @@ export default class {
     this.speech.speak('CRITICAL MISSION FAILURE!');
 
     this.started = false;
+
+    this.timer = new Timer(2500);
   }
 
   update() {
-    if (this.input.justPressed(ACTION_A)) {
+    this.timer.update();
+
+    if (this.input.justPressed(ACTION_A) && !this.timer.enabled) {
       this.textLayer.titleText = null;
       this.textLayer.helpText = null;
 

@@ -44,6 +44,8 @@ export default class extends SpriteController {
 
     this.renderer.cameraX = this.x + SPRITE_SIZE / 2.0 - SCREEN_WIDTH / 2.0;
     this.renderer.cameraY = this.y + SPRITE_SIZE / 2.0 - SCREEN_HEIGHT / 2.0;
+
+    this.lastPlatform = this.y;
   }
 
   update() {
@@ -61,6 +63,12 @@ export default class extends SpriteController {
     if (tileBelow) {
       this.ay = 0.0;
       this.dy = 0.0;
+
+      if (this.y - this.lastPlatform > 250.0) {
+        this.renderer.shake();
+      }
+
+      this.lastPlatform = this.y;
     } else if (tileAbove) {
       this.ay = 0.002;
       this.dy = 0.0;
@@ -208,6 +216,18 @@ export default class extends SpriteController {
     this.renderer.shake();
 
     if (this.lives === 0) {
+      this.sprite.disable();
+
+      for (let i = 0; i < 100; i++) {
+        this.particleSystem.emitParticle(
+          this.left + Math.random() * this.hitboxW,
+          this.top + Math.random() * this.hitboxH,
+          0.73, 0.73, 0.73,
+          (Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.25,
+          700.0
+        );
+      }
+
       this.game.over();
     }
   }

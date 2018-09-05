@@ -1,3 +1,5 @@
+import Timer from "./Timer";
+
 export default class {
   constructor(input, textLayer, speech) {
     this.input = input;
@@ -14,16 +16,20 @@ export default class {
 
     this.loaded = false;
     this.started = false;
+
+    this.timer = new Timer(1000);
   }
 
   update() {
+    this.timer.update();
+
     if (!this.loaded) {
       this.speech.speak('SYSTEMS OFFLINE');
 
       this.loaded = true;
     }
 
-    if (this.input.justPressed(ACTION_A)) {
+    if (this.input.justPressed(ACTION_A) && !this.timer.enabled) {
       this.textLayer.titleText = null;
       this.textLayer.helpText = null;
 

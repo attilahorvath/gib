@@ -71,5 +71,6 @@ export default class {
 
   over() {
     this.title = new GameOver(this, this.input, this.textLayer, this.speech);
+    this.spriteSheet.update();
   }
 }

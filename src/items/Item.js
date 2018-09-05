@@ -21,7 +21,6 @@ export default class extends SpriteController {
           this.gib.top > this.bottom || this.gib.bottom < this.top)) {
       this.collected();
       this.sprite.disable();
-      this.renderer.shake();
 
       const count = 50;
 
