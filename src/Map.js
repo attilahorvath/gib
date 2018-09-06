@@ -7,6 +7,7 @@ import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
 import Extermination from './items/Extermination';
+import Heart from './items/Heart';
 
 export default class {
   constructor(game, renderer, spriteSheet, input, particleSystem, textLayer,
@@ -53,14 +54,6 @@ export default class {
             SPRITE_SIZE * x, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 0.0,
             new WormHead(renderer, this, spriteSheet, gib, particleSystem)
           );
-          // spriteSheet.spawnSprite(
-          //   SPRITE_SIZE * x - 47, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
-          //   new Worm(renderer, this, gib, particleSystem)
-          // );
-          // spriteSheet.spawnSprite(
-          //   SPRITE_SIZE * x - 94, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 1.0,
-          //   new Worm(renderer, this, gib, particleSystem)
-          // );
           break;
         case 'D':
           spriteSheet.spawnSprite(
@@ -98,6 +91,13 @@ export default class {
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 5.0, 1.0,
             new Extermination(renderer, this, gib, particleSystem, textLayer,
+                              speech)
+          );
+          break;
+        case 'H':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 2.0,
+            new Heart(renderer, this, gib, particleSystem, textLayer,
                               speech)
           );
           break;

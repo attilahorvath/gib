@@ -9,7 +9,7 @@ export default class extends SpriteController {
 
     this.ignoreCollisions = true;
 
-    this.integrity = 50;
+    this.integrity = 30;
   }
 
   drill() {

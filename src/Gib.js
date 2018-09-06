@@ -69,7 +69,7 @@ export default class extends SpriteController {
       }
 
       this.lastPlatform = this.y;
-    } else if (tileAbove) {
+    } else if (tileAbove || (this.dy < 0 && !this.input.pressed(ACTION_A))) {
       this.ay = 0.002;
       this.dy = 0.0;
     } else {
@@ -191,7 +191,7 @@ export default class extends SpriteController {
   updateLives() {
     let text = '';
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < Math.max(3, this.lives); i++) {
       text += this.lives > i ? '<' : '/';
     }
 

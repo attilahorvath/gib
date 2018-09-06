@@ -20,6 +20,9 @@ export default class extends SpriteController {
     this.yOffset = 0.0;
 
     this.timer = new Timer(200, () => {
+      this.x = this.baseX;
+      this.y = this.baseY;
+
       this.falling = true;
     });
 
