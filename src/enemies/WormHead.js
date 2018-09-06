@@ -30,6 +30,10 @@ export default class extends WormSegment {
   laserHit() {
     this.health--;
 
+    this.sprite.flash();
+    this.middle.sprite.flash();
+    this.tail.sprite.flash();
+
     if (this.health <= 0) {
       this.explode();
       this.middle.explode();

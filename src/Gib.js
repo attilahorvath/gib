@@ -32,7 +32,7 @@ export default class extends SpriteController {
     this.lives = 3;
     this.invincible = false;
 
-    this.invincibilityTimer = new Timer(500, () => {
+    this.invincibilityTimer = new Timer(1000, () => {
       this.invincible = false;
     });
 
@@ -208,6 +208,8 @@ export default class extends SpriteController {
 
     this.lives--;
     this.updateLives();
+
+    this.sprite.flash();
 
     if (this.lives === 1) {
       this.speech.speak('WARNING! DAMAGE CRITICAL!');

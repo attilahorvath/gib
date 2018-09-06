@@ -16,14 +16,14 @@ export default class {
     this.progress += TIME_STEP;
 
     if (this.progress >= this.timeout) {
-      if (this.callback) {
-        this.callback();
-      }
-
       if (this.repeating) {
         this.progress -= this.timeout;
       } else {
         this.enabled = false;
+      }
+
+      if (this.callback) {
+        this.callback();
       }
     }
   }

@@ -3,6 +3,7 @@ precision highp float;
 uniform sampler2D tex;
 
 varying vec2 texCoord;
+varying float tint;
 
 void main() {
   vec2 texCoord = mix(
@@ -13,7 +14,9 @@ void main() {
     gl_PointCoord
   );
 
-  gl_FragColor = texture2D(tex, texCoord);
+  vec4 texel = texture2D(tex, texCoord);
+
+  gl_FragColor = vec4(texel.rgb + vec3(tint), texel.a);
 
   if (gl_FragColor.a < 0.1) {
     discard;

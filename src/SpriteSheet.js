@@ -1,7 +1,7 @@
 import Sprite from "./Sprite";
 
 const MAX_SPRITES = 8192;
-const VERTEX_SIZE = 20;
+const VERTEX_SIZE = 24;
 
 export default class {
   constructor(renderer) {
@@ -24,6 +24,7 @@ export default class {
     this.spriteVertex[2] = sprite.active ? sprite.z : 0.0;
     this.spriteVertex[3] = sprite.active ? sprite.u : 0.0;
     this.spriteVertex[4] = sprite.active ? sprite.v : 0.0;
+    this.spriteVertex[5] = sprite.active ? sprite.tint : 0.0;
 
     this.renderer.updateVertex(this.vertexBuffer, i * VERTEX_SIZE,
                                this.spriteVertex);

@@ -15,6 +15,8 @@ export default class extends SpriteController {
   drill() {
     this.integrity--;
 
+    this.sprite.flash();
+
     if (this.integrity <= 0) {
       for (let i = 0; i < 100; i++) {
         const type = Math.random() < 0.75;

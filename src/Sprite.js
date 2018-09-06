@@ -11,6 +11,30 @@ export default class {
 
     this.u = 0.0;
     this.v = 0.0;
+
+    this.tint = 0.0;
+
+    this.oldX = 0.0;
+    this.oldY = 0.0;
+    this.oldZ = 0.0;
+
+    this.oldU = 0.0;
+    this.oldV = 0.0;
+
+    this.oldTint = 0.0;
+
+    this.canFlash = true;
+
+    this.flashTimer = new Timer(100, () => {
+      if (this.tint !== 0.0) {
+        this.tint = 0.0;
+        this.flashTimer.reset();
+      } else {
+        this.canFlash = true;
+      }
+    });
+
+    this.flashTimer.enabled = false;
   }
 
   spawn(x, y, z, u, v, controller, frames) {
@@ -23,12 +47,18 @@ export default class {
     this.u = u;
     this.v = v;
 
+    this.tint = 0.0;
+
     this.oldX = this.x;
     this.oldY = this.y;
     this.oldZ = this.z;
 
     this.oldU = this.u;
     this.oldV = this.v;
+
+    this.oldTint = this.tint;
+
+    this.canFlash = true;
 
     if (controller) {
       controller.init(this);
@@ -64,6 +94,8 @@ export default class {
       this.frameTimer.update();
     }
 
+    this.flashTimer.update();
+
     if (this.inactivate) {
       this.active = false;
       this.inactivate = false;
@@ -77,12 +109,14 @@ export default class {
       this.u = 0.0;
       this.v = 0.0;
 
+      this.tint = 0.0;
+
       this.controller = null;
     }
 
     const changed = this.oldX !== this.x || this.oldY !== this.y ||
                     this.oldZ !== this.z || this.oldU !== this.u ||
-                    this.oldV !== this.v;
+                    this.oldV !== this.v || this.oldTint !== this.tint;
 
     this.oldX = this.x;
     this.oldY = this.y;
@@ -91,7 +125,19 @@ export default class {
     this.oldU = this.u;
     this.oldV = this.v;
 
+    this.oldTint = this.tint;
+
     return changed;
+  }
+
+  flash() {
+    if (!this.canFlash) {
+      return;
+    }
+
+    this.canFlash = false;
+    this.tint = 1.0;
+    this.flashTimer.reset();
   }
 
   disable() {
