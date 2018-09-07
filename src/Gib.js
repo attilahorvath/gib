@@ -19,7 +19,8 @@ export default class extends SpriteController {
       propulsion: false,
       elevation: false,
       excavation: false,
-      extermination: false
+      extermination: false,
+      flotation: false
     };
 
     this.loaded = false;
@@ -37,6 +38,8 @@ export default class extends SpriteController {
     });
 
     this.invincibilityTimer.enabled = false;
+
+    this.doubleJumpReady = true;
   }
 
   init(sprite) {
@@ -69,6 +72,7 @@ export default class extends SpriteController {
       }
 
       this.lastPlatform = this.y;
+      this.doubleJumpReady = true;
     } else if (tileAbove || (this.dy < 0 && !this.input.pressed(ACTION_A))) {
       this.ay = 0.002;
       this.dy = 0.0;
@@ -165,9 +169,14 @@ export default class extends SpriteController {
       this.ax = -0.002;
     }
 
-    if (this.input.justPressed(ACTION_A) && this.ay === 0.0 &&
-        this.abilities.elevation) {
+    if (this.input.justPressed(ACTION_A) && this.abilities.elevation &&
+        (this.ay === 0.0 ||
+        (this.abilities.flotation && this.doubleJumpReady))) {
       this.dy = -0.9;
+
+      if (this.ay < 0.0) {
+        this.doubleJumpReady = false;
+      }
     }
 
     super.update();
@@ -206,8 +215,8 @@ export default class extends SpriteController {
     this.invincible = true;
     this.invincibilityTimer.reset();
 
-    this.lives--;
-    this.updateLives();
+    // this.lives--;
+    // this.updateLives();
 
     this.sprite.flash();
 

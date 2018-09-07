@@ -7,6 +7,7 @@ import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
 import Extermination from './items/Extermination';
+import Flotation from './items/Flotation';
 import Heart from './items/Heart';
 
 export default class {
@@ -94,11 +95,18 @@ export default class {
                               speech)
           );
           break;
+        case 'F':
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 1.0,
+            new Flotation(renderer, this, gib, particleSystem, textLayer,
+                          speech)
+          );
+          break;
         case 'H':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 2.0,
             new Heart(renderer, this, gib, particleSystem, textLayer,
-                              speech)
+                      speech)
           );
           break;
         }
