@@ -39,7 +39,7 @@ export default class extends SpriteController {
 
     this.invincibilityTimer.enabled = false;
 
-    this.doubleJumpReady = true;
+    this.jumps = 0;
   }
 
   init(sprite) {
@@ -63,6 +63,8 @@ export default class extends SpriteController {
     const tileAbove = this.tileAt(0.0, -1.0);
     const tileBelow = this.tileAt(0.0, 1.0);
 
+    let drilling = false;
+
     if (tileBelow) {
       this.ay = 0.0;
       this.dy = 0.0;
@@ -72,7 +74,7 @@ export default class extends SpriteController {
       }
 
       this.lastPlatform = this.y;
-      this.doubleJumpReady = true;
+      this.jumps = 0;
     } else if (tileAbove || (this.dy < 0 && !this.input.pressed(ACTION_A))) {
       this.ay = 0.002;
       this.dy = 0.0;
@@ -80,13 +82,13 @@ export default class extends SpriteController {
       this.ay = 0.002;
     }
 
-    if (this.input.pressed(LEFT) && this.abilities.propulsion) {
+    if (this.input.x < 0.0 && this.abilities.propulsion) {
       if (this.ax > 0.0) {
         this.ax = 0.0;
       }
 
       if (!tileLeft) {
-        this.ax -= 0.001;
+        this.ax += 0.001 * this.input.x;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
@@ -96,6 +98,7 @@ export default class extends SpriteController {
           this.renderer.shake(5);
           this.drill(LEFT);
           tileLeft.drill();
+          drilling = true;
         }
       }
 
@@ -103,13 +106,13 @@ export default class extends SpriteController {
       this.lastDirection = 0.0;
 
       this.facing = LEFT;
-    } else if (this.input.pressed(RIGHT) && this.abilities.propulsion) {
+    } else if (this.input.x > 0.0 && this.abilities.propulsion) {
       if (this.ax < 0.0) {
         this.ax = 0.0;
       }
 
       if (!tileRight) {
-        this.ax += 0.001;
+        this.ax += 0.001 * this.input.x;;
       } else {
         this.dx = 0.0;
         this.ax = 0.0;
@@ -119,6 +122,7 @@ export default class extends SpriteController {
           this.renderer.shake(5);
           this.drill(RIGHT);
           tileRight.drill();
+          drilling = true;
         }
       }
 
@@ -141,24 +145,27 @@ export default class extends SpriteController {
         this.ax = 0.0;
       }
 
-      if (this.abilities.excavation && this.input.pressed(UP) &&
+      if (this.abilities.excavation && this.input.y < 0.0 &&
           this.input.pressed(ACTION_B) && tileAbove && tileAbove.drill) {
         this.renderer.shake(5);
         this.drill(UP);
         tileAbove.drill();
-      } else if (this.abilities.excavation && this.input.pressed(DOWN) &&
+        drilling = true;
+      } else if (this.abilities.excavation && this.input.y > 0.0 &&
                  this.input.pressed(ACTION_B) && tileBelow && tileBelow.drill) {
         this.renderer.shake(5);
         this.drill(DOWN);
         tileBelow.drill();
+        drilling = true;
       }
     }
 
-    if (this.abilities.extermination && this.input.justPressed(ACTION_B)) {
+    if (this.abilities.extermination && this.input.justPressed(ACTION_B) &&
+        !drilling) {
       const xOffset = this.facing === RIGHT ? 0 : -40;
 
       this.spriteSheet.spawnSprite(
-        this.x + this.hitboxW / 2 + xOffset, this.y, MAP_Z, 0.0, 2.0,
+        this.x + this.hitboxW / 2 + xOffset, this.y, PROJECTILE_Z, 0.0, 2.0,
         new Laser(this.map, this.facing, this.spriteSheet, this.particleSystem)
       );
     }
@@ -171,12 +178,9 @@ export default class extends SpriteController {
 
     if (this.input.justPressed(ACTION_A) && this.abilities.elevation &&
         (this.ay === 0.0 ||
-        (this.abilities.flotation && this.doubleJumpReady))) {
+        (this.abilities.flotation && this.jumps < 2))) {
       this.dy = -0.9;
-
-      if (this.ay < 0.0) {
-        this.doubleJumpReady = false;
-      }
+      this.jumps++;
     }
 
     super.update();
@@ -215,8 +219,8 @@ export default class extends SpriteController {
     this.invincible = true;
     this.invincibilityTimer.reset();
 
-    // this.lives--;
-    // this.updateLives();
+    this.lives--;
+    this.updateLives();
 
     this.sprite.flash();
 

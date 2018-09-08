@@ -32,7 +32,7 @@ export default class extends SpriteController {
           0.53, 0.0, 0.0,
           Math.cos(angle) * 0.2 + (Math.random() - 0.5) * 0.05,
           Math.sin(angle) * 0.2 + (Math.random() - 0.5) * 0.05,
-          1000.0
+          700.0
         );
       }
     }

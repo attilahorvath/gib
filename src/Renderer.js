@@ -118,13 +118,16 @@ export default class {
   update() {
     this.shakeTimer.update();
 
-    this.view[12] = -Math.round(this.cameraX);
-    this.view[13] = -Math.round(this.cameraY);
+    this.view[12] = -this.cameraX;
+    this.view[13] = -this.cameraY;
 
     if (this.shakeTimer.enabled) {
       this.view[12] += (Math.random() - 0.5) * this.shakeIntensity;
       this.view[13] += (Math.random() - 0.5) * this.shakeIntensity;
     }
+
+    this.view[12] = Math.round(this.view[12]);
+    this.view[13] = Math.round(this.view[13]);
   }
 
   draw(shader, vertexBuffer, count) {

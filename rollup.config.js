@@ -41,6 +41,7 @@ export default {
       FONT_TEXTURE_OFFSET: '48.0',
 
       MAP_Z: '0.1',
+      PROJECTILE_Z: '0.5',
       GIB_Z: '0.7',
       DECAL_Z: '0.8',
       PARTICLE_Z: '0.9',

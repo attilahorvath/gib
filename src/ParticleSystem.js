@@ -1,4 +1,4 @@
-const MAX_PARTICLES = 128;
+const MAX_PARTICLES = 2048;
 const VERTEX_SIZE = 36;
 
 export default class {

@@ -1,127 +1,51 @@
-const KEY_UP = 'ArrowUp';
-const KEY_DOWN = 'ArrowDown';
-const KEY_LEFT = 'ArrowLeft';
-const KEY_RIGHT = 'ArrowRight';
-
-const KEY_W = 'KeyW';
-const KEY_S = 'KeyS';
-const KEY_A = 'KeyA';
-const KEY_D = 'KeyD';
-
-const KEY_X = 'KeyX';
-const KEY_Z = 'KeyZ';
-
-const KEY_K = 'KeyK';
-const KEY_J = 'KeyJ';
-
-const KEY_SPACE = 'Space';
-
-const keyCodeMapping = {
-  38: KEY_UP,
-  40: KEY_DOWN,
-  37: KEY_LEFT,
-  39: KEY_RIGHT,
-
-  87: KEY_W,
-  65: KEY_A,
-  83: KEY_S,
-  68: KEY_D,
-
-  88: KEY_X,
-  90: KEY_Z,
-
-  75: KEY_K,
-  74: KEY_J,
-
-  32: KEY_SPACE
-};
+import KeyboardInput from "./KeyboardInput";
+import GamepadInput from "./GamepadInput";
 
 export default class {
   constructor() {
-    this.keysPressed = 0;
-    this.lastPressed = 0;
-    this.keysJustPressed = 0;
-    this.keysJustReleased = 0;
+    this.devices = [new KeyboardInput()];
 
-    addEventListener("keydown", event => {
-      const code = event.code || keyCodeMapping[event.keyCode];
-
-      switch (code) {
-      case KEY_UP: case KEY_W:
-        this.keysPressed |= UP;
-        event.preventDefault();
-        break;
-      case KEY_DOWN: case KEY_S:
-        this.keysPressed |= DOWN;
-        event.preventDefault();
-        break;
-      case KEY_LEFT: case KEY_A:
-        this.keysPressed |= LEFT;
-        event.preventDefault();
-        break;
-      case KEY_RIGHT: case KEY_D:
-        this.keysPressed |= RIGHT;
-        event.preventDefault();
-        break;
-      case KEY_X: case KEY_K: case KEY_SPACE:
-        this.keysPressed |= ACTION_A;
-        event.preventDefault();
-        break;
-      case KEY_Z: case KEY_J:
-        this.keysPressed |= ACTION_B;
-        event.preventDefault();
-        break;
-      }
-    });
-
-    addEventListener("keyup", event => {
-      const code = event.code || keyCodeMapping[event.keyCode];
-
-      switch (code) {
-      case KEY_UP: case KEY_W:
-        this.keysPressed &= ~UP;
-        event.preventDefault();
-        break;
-      case KEY_DOWN: case KEY_S:
-        this.keysPressed &= ~DOWN;
-        event.preventDefault();
-        break;
-      case KEY_LEFT: case KEY_A:
-        this.keysPressed &= ~LEFT;
-        event.preventDefault();
-        break;
-      case KEY_RIGHT: case KEY_D:
-        this.keysPressed &= ~RIGHT;
-        event.preventDefault();
-        break;
-      case KEY_X: case KEY_K: case KEY_SPACE:
-        this.keysPressed &= ~ACTION_A;
-        event.preventDefault();
-        break;
-      case KEY_Z: case KEY_J:
-        this.keysPressed &= ~ACTION_B;
-        event.preventDefault();
-        break;
-      }
-    });
+    this.x = 0.0;
+    this.y = 0.0;
   }
 
   update() {
-    this.keysJustPressed = this.keysPressed & ~this.lastPressed;
-    this.keysJustReleased = ~this.keysPressed & this.lastPressed;
+    for (const gamepad of navigator.getGamepads()) {
+      if (!gamepad) {
+        continue;
+      }
 
-    this.lastPressed = this.keysPressed;
+      let gamepadInput =
+        this.devices.find(device => device.index === gamepad.index);
+
+      if (!gamepadInput) {
+        gamepadInput = new GamepadInput(gamepad.index);
+        this.devices.push(gamepadInput);
+      }
+
+      gamepadInput.process(gamepad);
+    }
+
+    for (const device of this.devices) {
+      device.update();
+    }
+
+    const deviceX = this.devices.find(device => device.x !== 0.0);
+    this.x = deviceX ? deviceX.x : 0.0;
+
+    const deviceY = this.devices.find(device => device.y !== 0.0);
+    this.y = deviceY ? deviceY.y : 0.0;
   }
 
-  pressed(key) {
-    return (this.keysPressed & key) === key;
+  pressed(code) {
+    return this.devices.some(device => device.pressed(code));
   }
 
-  justPressed(key) {
-    return (this.keysJustPressed & key) === key;
+  justPressed(code) {
+    return this.devices.some(device => device.justPressed(code));
   }
 
-  justReleased(key) {
-    return (this.keysJustReleased & key) === key;
+  justReleased(code) {
+    return this.devices.some(device => device.justReleased(code));
   }
 }

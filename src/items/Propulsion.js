@@ -9,7 +9,8 @@ export default class extends Item {
     );
 
     this.textLayer.helpText = this.textLayer.createCenteredSegment(
-      220, 'USE THE ARROWS TO MOVE', 32, TEXT_ANIMATED, 2500, 2500
+      176, ' USE A GAMEPAD OR\nTHE ARROWS TO MOVE', 32, TEXT_ANIMATED,
+      2500, 3500
     );
 
     this.speech.speak('PROPULSION SYSTEM ONLINE');

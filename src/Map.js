@@ -3,6 +3,9 @@ import Gib from './Gib';
 import Brick from './Brick';
 import Rock from './enemies/Rock';
 import WormHead from './enemies/WormHead';
+import Boss from './enemies/Boss';
+import BossSegment from './enemies/BossSegment';
+import BossEye from './enemies/BossEye';
 import Propulsion from './items/Propulsion';
 import Elevation from './items/Elevation';
 import Excavation from './items/Excavation';
@@ -15,6 +18,8 @@ export default class {
               speech) {
     const gib = new Gib(game, renderer, this, spriteSheet, input,
                         particleSystem, textLayer, speech);
+
+    this.boss = new Boss(this);
 
     this.tiles = [];
 
@@ -31,6 +36,8 @@ export default class {
         let u = null;
         let v = 0;
         let controller = null;
+
+        let segment = null;
 
         switch (type) {
         case '1':
@@ -55,6 +62,35 @@ export default class {
             SPRITE_SIZE * x, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 0.0,
             new WormHead(renderer, this, spriteSheet, gib, particleSystem)
           );
+          break;
+        case '/':
+          segment = new BossSegment(this, particleSystem);
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, 4.0, 2.0, segment
+          );
+          this.boss.segments.push(segment);
+          break;
+        case '\\':
+          segment = new BossSegment(this, particleSystem);
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, 5.0, 2.0, segment
+          );
+          this.boss.segments.push(segment);
+          break;
+        case 'S':
+          segment = new BossSegment(this, particleSystem);
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, 6.0, 2.0, segment
+          );
+          this.boss.segments.push(segment);
+          break;
+        case 'O':
+          const eye = new BossEye(this, this.boss, gib, spriteSheet,
+                                  particleSystem);
+          spriteSheet.spawnSprite(
+            SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, 7.0, 2.0, eye
+          );
+          this.boss.eyes.push(eye);
           break;
         case 'D':
           spriteSheet.spawnSprite(
