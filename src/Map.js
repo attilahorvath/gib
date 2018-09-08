@@ -19,7 +19,8 @@ export default class {
     const gib = new Gib(game, renderer, this, spriteSheet, input,
                         particleSystem, textLayer, speech);
 
-    this.boss = new Boss(this);
+    this.boss = new Boss(game, renderer, this, spriteSheet, gib, particleSystem,
+                         textLayer, speech);
 
     this.tiles = [];
 
@@ -137,6 +138,10 @@ export default class {
             new Flotation(renderer, this, gib, particleSystem, textLayer,
                           speech)
           );
+          break;
+        case 'T':
+          this.boss.teleportationX = SPRITE_SIZE * x;
+          this.boss.teleportationY = SPRITE_SIZE * y;
           break;
         case 'H':
           spriteSheet.spawnSprite(

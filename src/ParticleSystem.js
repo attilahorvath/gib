@@ -26,7 +26,7 @@ export default class {
     this.particleVertex[8] = lifetime;
 
     this.renderer.updateVertex(this.vertexBuffer, this.nextIndex * VERTEX_SIZE,
-      this.particleVertex);
+                               this.particleVertex);
 
     this.nextIndex = (this.nextIndex + 1) % MAX_PARTICLES;
   }

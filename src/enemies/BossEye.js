@@ -54,8 +54,8 @@ export default class extends BossSegment {
   }
 
   shoot() {
-    const dx = Math.cos(this.angle) * 0.1;
-    const dy = Math.sin(this.angle) * 0.1;
+    const dx = Math.cos(this.angle) * 0.2;
+    const dy = Math.sin(this.angle) * 0.2;
 
     this.spriteSheet.spawnSprite(
       this.left + this.hitboxW / 2 - 32, this.top + this.hitboxH / 2 - 32,

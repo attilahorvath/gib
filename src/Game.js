@@ -7,6 +7,8 @@ import Speech from './Speech';
 import Map from './Map';
 import Title from './Title';
 import GameOver from './GameOver';
+import Victory from './Victory';
+import Timer from './Timer';
 
 export default class {
   constructor() {
@@ -26,6 +28,59 @@ export default class {
     this.timeAccumulator = 0;
 
     this.loaded = false;
+
+    this.celebrationTimer = new Timer(Math.random() * 300, () => {
+      const x = this.renderer.cameraX + Math.random() * SCREEN_WIDTH;
+      const y = this.renderer.cameraY + Math.random() * SCREEN_HEIGHT;
+
+      const type = Math.random();
+
+      let r = 0.0;
+      let g = 0.0;
+      let b = 0.0;
+
+      if (type < 0.16) {
+        r = 0.73;
+        g = 0.73;
+        b = 0.73;
+      } else if (type < 0.33) {
+        r = 0.0;
+        g = 0.8;
+        b = 0.33;
+      } else if (type < 0.5) {
+        r = 0.0;
+        g = 0.0;
+        b = 0.66;
+      } else if (type < 0.66) {
+        r = 0.66;
+        g = 1.0;
+        b = 0.93;
+      } else if (type < 0.83) {
+        r = 0.8;
+        g = 0.26;
+        b = 0.8;
+      } else {
+        r = 1.0;
+        g = 0.46;
+        b = 0.46;
+      }
+
+      for (let i = 0; i < 80; i++) {
+        const angle = (2.0 * Math.PI / 80) * i;
+
+        this.particleSystem.emitParticle(
+          x, y,
+          r, g, b,
+          Math.cos(angle) * 0.1 + (Math.random() - 0.5) * 0.03,
+          Math.sin(angle) * 0.1 + (Math.random() - 0.5) * 0.03,
+          1000.0
+        );
+      }
+
+      this.celebrationTimer.timeout = Math.random() * 300;
+    }, true);
+
+    this.celebrationTimer.enabled = false;
   }
 
   load() {
@@ -48,6 +103,7 @@ export default class {
         if (!this.title.started) {
           this.title.update();
         } else {
+          this.celebrationTimer.update();
           this.spriteSheet.update();
         }
 
@@ -72,5 +128,10 @@ export default class {
   over() {
     this.title = new GameOver(this, this.input, this.textLayer, this.speech);
     this.spriteSheet.update();
+  }
+
+  won() {
+    this.title = new Victory(this, this.input, this.textLayer, this.speech);
+    this.celebrationTimer.enabled = true;
   }
 }
