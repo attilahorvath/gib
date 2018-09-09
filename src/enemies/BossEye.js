@@ -3,12 +3,13 @@ import Timer from "../Timer";
 import Poison from "../Poison";
 
 export default class extends BossSegment {
-  constructor(map, boss, gib, spriteSheet, particleSystem) {
+  constructor(map, boss, gib, spriteSheet, particleSystem, audio) {
     super(map, particleSystem);
 
     this.boss = boss;
     this.gib = gib;
     this.spriteSheet = spriteSheet;
+    this.audio = audio;
 
     this.hitboxX = 8.0;
     this.hitboxY = 8.0;
@@ -72,6 +73,8 @@ export default class extends BossSegment {
 
     if (this.health <= 0) {
       this.explode();
+
+      this.audio.play('square', 300, 100, 0.3);
     }
 
     return true;

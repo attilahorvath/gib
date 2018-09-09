@@ -13,6 +13,6 @@ export default class extends Item {
       2500, 3500
     );
 
-    this.speech.speak('PROPULSION SYSTEM ONLINE');
+    this.audio.speak('PROPULSION SYSTEM ONLINE');
   }
 }

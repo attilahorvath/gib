@@ -15,12 +15,12 @@ import Heart from './items/Heart';
 
 export default class {
   constructor(game, renderer, spriteSheet, input, particleSystem, textLayer,
-              speech) {
+              audio) {
     const gib = new Gib(game, renderer, this, spriteSheet, input,
-                        particleSystem, textLayer, speech);
+                        particleSystem, textLayer, audio);
 
     this.boss = new Boss(game, renderer, this, spriteSheet, gib, particleSystem,
-                         textLayer, speech);
+                         textLayer, audio);
 
     this.tiles = [];
 
@@ -55,13 +55,14 @@ export default class {
         case 'R':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 0.0,
-            new Rock(renderer, this, gib, particleSystem)
+            new Rock(renderer, this, gib, particleSystem, audio)
           );
           break;
         case 'W':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y + 8, MAP_Z, 7.0, 0.0,
-            new WormHead(renderer, this, spriteSheet, gib, particleSystem)
+            new WormHead(renderer, this, spriteSheet, gib, particleSystem,
+                         audio)
           );
           break;
         case '/':
@@ -87,7 +88,7 @@ export default class {
           break;
         case 'O':
           const eye = new BossEye(this, this.boss, gib, spriteSheet,
-                                  particleSystem);
+                                  particleSystem, audio);
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, MAP_Z, 7.0, 2.0, eye
           );
@@ -108,35 +109,35 @@ export default class {
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 1.0,
             new Propulsion(renderer, this, gib, particleSystem, textLayer,
-                           speech)
+                           audio)
           );
           break;
         case 'E':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 3.0, 1.0,
             new Elevation(renderer, this, gib, particleSystem, textLayer,
-                          speech)
+                          audio)
           );
           break;
         case 'X':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 4.0, 1.0,
             new Excavation(renderer, this, gib, particleSystem, textLayer,
-                           speech)
+                           audio)
           );
           break;
         case 'L':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 5.0, 1.0,
             new Extermination(renderer, this, gib, particleSystem, textLayer,
-                              speech)
+                              audio)
           );
           break;
         case 'F':
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 6.0, 1.0,
             new Flotation(renderer, this, gib, particleSystem, textLayer,
-                          speech)
+                          audio)
           );
           break;
         case 'T':
@@ -147,7 +148,7 @@ export default class {
           spriteSheet.spawnSprite(
             SPRITE_SIZE * x, SPRITE_SIZE * y, DECAL_Z, 2.0, 2.0,
             new Heart(renderer, this, gib, particleSystem, textLayer,
-                      speech)
+                      audio)
           );
           break;
         }

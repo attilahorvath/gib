@@ -5,6 +5,6 @@ export default class extends Item {
     this.gib.lives++;
     this.gib.updateLives();
 
-    this.speech.speak('DAMAGE REPAIRED!');
+    this.audio.speak('DAMAGE REPAIRED!');
   }
 }

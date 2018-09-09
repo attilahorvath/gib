@@ -6,6 +6,10 @@ varying vec2 texCoord;
 varying float tint;
 
 void main() {
+  if (gl_FragCoord.z == 0.5) {
+    discard;
+  }
+
   vec2 texCoord = mix(
     (vec2(TILE_SIZE) * texCoord) /
       vec2(TILES_TEXTURE_WIDTH, TILES_TEXTURE_HEIGHT),

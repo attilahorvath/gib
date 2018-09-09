@@ -12,6 +12,6 @@ export default class extends Item {
       220, 'PRESS X AGAIN TO JUMP HIGHER', 32, TEXT_ANIMATED, 2500, 2500
     );
 
-    this.speech.speak('FLOTATION SYSTEM ONLINE');
+    this.audio.speak('FLOTATION SYSTEM ONLINE');
   }
 }

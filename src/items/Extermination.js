@@ -12,6 +12,6 @@ export default class extends Item {
       220, 'PRESS Z TO FIRE', 32, TEXT_ANIMATED, 2500, 2500
     );
 
-    this.speech.speak('EXTERMINATION SYSTEM ONLINE');
+    this.audio.speak('EXTERMINATION SYSTEM ONLINE');
   }
 }

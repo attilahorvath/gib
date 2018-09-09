@@ -12,6 +12,6 @@ export default class extends Item {
       220, 'HOLD Z TO BREAK BRICKS', 32, TEXT_ANIMATED, 2500, 2500
     );
 
-    this.speech.speak('EXCAVATION SYSTEM ONLINE');
+    this.audio.speak('EXCAVATION SYSTEM ONLINE');
   }
 }

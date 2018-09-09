@@ -3,7 +3,7 @@ import Input from './Input';
 import SpriteSheet from './SpriteSheet';
 import ParticleSystem from './ParticleSystem';
 import TextLayer from './TextLayer';
-import Speech from './Speech';
+import Audio from './Audio';
 import Map from './Map';
 import Title from './Title';
 import GameOver from './GameOver';
@@ -18,11 +18,11 @@ export default class {
     this.spriteSheet = new SpriteSheet(this.renderer);
     this.particleSystem = new ParticleSystem(this.renderer);
     this.textLayer = new TextLayer(this.renderer);
-    this.speech = new Speech();
+    this.audio = new Audio();
 
     this.load();
 
-    this.title = new Title(this.input, this.textLayer, this.speech);
+    this.title = new Title(this.input, this.textLayer, this.audio);
 
     this.lastTimestamp = 0;
     this.timeAccumulator = 0;
@@ -77,6 +77,8 @@ export default class {
         );
       }
 
+      this.audio.play('sawtooth', 100, 150, 0.2);
+
       this.celebrationTimer.timeout = Math.random() * 300;
     }, true);
 
@@ -87,12 +89,16 @@ export default class {
     this.spriteSheet.reset();
 
     this.map = new Map(this, this.renderer, this.spriteSheet, this.input,
-                       this.particleSystem, this.textLayer, this.speech);
+                       this.particleSystem, this.textLayer, this.audio);
   }
 
   update(timestamp) {
     const deltaTime = timestamp - this.lastTimestamp;
     this.lastTimestamp = timestamp;
+
+    if (deltaTime > 2500) {
+      return;
+    }
 
     this.timeAccumulator += deltaTime;
 
@@ -126,12 +132,12 @@ export default class {
   }
 
   over() {
-    this.title = new GameOver(this, this.input, this.textLayer, this.speech);
+    this.title = new GameOver(this, this.input, this.textLayer, this.audio);
     this.spriteSheet.update();
   }
 
   won() {
-    this.title = new Victory(this, this.input, this.textLayer, this.speech);
+    this.title = new Victory(this, this.input, this.textLayer, this.audio);
     this.celebrationTimer.enabled = true;
   }
 }

@@ -2,12 +2,13 @@ import SpriteController from "../SpriteController";
 import Timer from "../Timer";
 
 export default class extends SpriteController {
-  constructor(renderer, map, gib, particleSystem) {
+  constructor(renderer, map, gib, particleSystem, audio) {
     super(map);
 
     this.renderer = renderer;
     this.gib = gib;
     this.particleSystem = particleSystem;
+    this.audio = audio;
 
     this.hitboxX = 8.0;
     this.hitboxY = 4.0;
@@ -24,6 +25,8 @@ export default class extends SpriteController {
       this.y = this.baseY;
 
       this.falling = true;
+
+      this.audio.play('square', 500, 150, 0.5);
     });
 
     this.timer.enabled = false;

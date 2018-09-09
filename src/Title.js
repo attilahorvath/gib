@@ -1,10 +1,10 @@
 import Timer from "./Timer";
 
 export default class {
-  constructor(input, textLayer, speech) {
+  constructor(input, textLayer, audio) {
     this.input = input;
     this.textLayer = textLayer;
-    this.speech = speech;
+    this.audio = audio;
 
     textLayer.titleText = textLayer.createCenteredSegment(
       50, 'SYSTEMS OFFLINE', 64, TEXT_ANIMATED
@@ -24,7 +24,7 @@ export default class {
     this.timer.update();
 
     if (!this.loaded) {
-      this.speech.speak('SYSTEMS OFFLINE');
+      this.audio.speak('SYSTEMS OFFLINE');
 
       this.loaded = true;
     }

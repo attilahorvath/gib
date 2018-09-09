@@ -47,19 +47,19 @@ export default class extends InputDevice {
 
       switch (code) {
       case KEY_UP: case KEY_W:
-        this.y = -1.0;
+        this.pressedMask |= UP;
         event.preventDefault();
         break;
       case KEY_DOWN: case KEY_S:
-        this.y = 1.0;
+        this.pressedMask |= DOWN;
         event.preventDefault();
         break;
       case KEY_LEFT: case KEY_A:
-        this.x = -1.0;
+        this.pressedMask |= LEFT;
         event.preventDefault();
         break;
       case KEY_RIGHT: case KEY_D:
-        this.x = 1.0;
+        this.pressedMask |= RIGHT;
         event.preventDefault();
         break;
       case KEY_X: case KEY_K: case KEY_SPACE:
@@ -78,19 +78,19 @@ export default class extends InputDevice {
 
       switch (code) {
       case KEY_UP: case KEY_W:
-        this.y = 0.0
+        this.pressedMask &= ~UP;
         event.preventDefault();
         break;
       case KEY_DOWN: case KEY_S:
-        this.y = 0.0;
+        this.pressedMask &= ~DOWN;
         event.preventDefault();
         break;
       case KEY_LEFT: case KEY_A:
-        this.x = 0.0;
+        this.pressedMask &= ~LEFT;
         event.preventDefault();
         break;
       case KEY_RIGHT: case KEY_D:
-        this.x = 0.0;
+        this.pressedMask &= ~RIGHT;
         event.preventDefault();
         break;
       case KEY_X: case KEY_K: case KEY_SPACE:
@@ -103,5 +103,28 @@ export default class extends InputDevice {
         break;
       }
     });
+  }
+
+  update() {
+    super.update();
+
+    this.x = 0.0;
+    this.y = 0.0;
+
+    if (this.pressed(UP)) {
+      this.y--;
+    }
+
+    if (this.pressed(DOWN)) {
+      this.y++;
+    }
+
+    if (this.pressed(LEFT)) {
+      this.x--;
+    }
+
+    if (this.pressed(RIGHT)) {
+      this.x++;
+    }
   }
 }

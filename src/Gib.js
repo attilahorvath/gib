@@ -4,7 +4,7 @@ import Laser from "./Laser";
 
 export default class extends SpriteController {
   constructor(game, renderer, map, spriteSheet, input, particleSystem,
-              textLayer, speech) {
+              textLayer, audio) {
     super(map);
 
     this.game = game;
@@ -13,7 +13,7 @@ export default class extends SpriteController {
     this.input = input;
     this.particleSystem = particleSystem;
     this.textLayer = textLayer;
-    this.speech = speech;
+    this.audio = audio;
 
     this.abilities = {
       propulsion: false,
@@ -40,6 +40,10 @@ export default class extends SpriteController {
     this.invincibilityTimer.enabled = false;
 
     this.jumps = 0;
+
+    this.drillingTimer = new Timer(50, () => {
+      this.audio.play('sawtooth', 150, 200, 0.05);
+    }, true);
   }
 
   init(sprite) {
@@ -160,6 +164,9 @@ export default class extends SpriteController {
       }
     }
 
+    this.drillingTimer.enabled = drilling;
+    this.drillingTimer.update();
+
     if (this.abilities.extermination && this.input.justPressed(ACTION_B) &&
         !drilling) {
       const xOffset = this.facing === RIGHT ? 0 : -40;
@@ -168,6 +175,8 @@ export default class extends SpriteController {
         this.x + this.hitboxW / 2 + xOffset, this.y, PROJECTILE_Z, 0.0, 2.0,
         new Laser(this.map, this.facing, this.spriteSheet, this.particleSystem)
       );
+
+      this.audio.play('square', 600, 800, 0.3);
     }
 
     if (this.ax > 0.002) {
@@ -181,6 +190,7 @@ export default class extends SpriteController {
         (this.abilities.flotation && this.jumps < 2))) {
       this.dy = -0.9;
       this.jumps++;
+      this.audio.play('sawtooth', 150, 500, 0.3);
     }
 
     super.update();
@@ -224,8 +234,10 @@ export default class extends SpriteController {
 
     this.sprite.flash();
 
+    this.audio.play('sawtooth', 100, 200, 0.3);
+
     if (this.lives === 1) {
-      this.speech.speak('WARNING! DAMAGE CRITICAL!');
+      this.audio.speak('WARNING! DAMAGE CRITICAL!');
     }
 
     this.renderer.shake();

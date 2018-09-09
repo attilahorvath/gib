@@ -1,11 +1,11 @@
 import Timer from "./Timer";
 
 export default class {
-  constructor(game, input, textLayer, speech) {
+  constructor(game, input, textLayer, audio) {
     this.game = game;
     this.input = input;
     this.textLayer = textLayer;
-    this.speech = speech;
+    this.audio = audio;
 
     textLayer.titleText = textLayer.createCenteredSegment(
       50, 'CRITICAL\nMISSION\nFAILURE', 64, TEXT_ANIMATED
@@ -15,7 +15,7 @@ export default class {
       500, 'PRESS START TO TRY AGAIN', 32, TEXT_FLASHING, 2000
     );
 
-    this.speech.speak('CRITICAL MISSION FAILURE!');
+    this.audio.speak('CRITICAL MISSION FAILURE!');
 
     this.started = false;
 

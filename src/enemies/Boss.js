@@ -3,7 +3,7 @@ import Teleportation from '../items/Teleportation';
 
 export default class extends SpriteController {
   constructor(game, renderer, map, spriteSheet, gib, particleSystem, textLayer,
-              speech) {
+              audio) {
     super(map);
 
     this.game = game;
@@ -12,7 +12,7 @@ export default class extends SpriteController {
     this.gib = gib;
     this.particleSystem = particleSystem;
     this.textLayer = textLayer;
-    this.speech = speech;
+    this.audio = audio;
 
     this.eyes = [];
     this.segments = [];
@@ -29,8 +29,10 @@ export default class extends SpriteController {
       this.spriteSheet.spawnSprite(
         this.teleportationX, this.teleportationY, DECAL_Z, 3.0, 2.0,
         new Teleportation(this.game, this.renderer, this.map, this.gib,
-                          this.particleSystem, this.textLayer, this.speech)
+                          this.particleSystem, this.textLayer, this.audio)
       );
+
+      this.audio.play('square', 600, 100, 1.0);
 
       this.textLayer.helpText = null;
     } else {
@@ -41,7 +43,7 @@ export default class extends SpriteController {
       }
 
       this.textLayer.helpText = this.textLayer.createCenteredSegment(
-        400, text, 32
+        550, text, 32
       );
     }
   }

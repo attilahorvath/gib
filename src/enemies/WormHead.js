@@ -1,10 +1,11 @@
 import WormSegment from "./WormSegment";
 
 export default class extends WormSegment {
-  constructor(renderer, map, spriteSheet, gib, particleSystem) {
+  constructor(renderer, map, spriteSheet, gib, particleSystem, audio) {
     super(renderer, map, gib, particleSystem);
 
     this.spriteSheet = spriteSheet;
+    this.audio = audio;
 
     this.health = 5;
   }
@@ -38,6 +39,8 @@ export default class extends WormSegment {
       this.explode();
       this.middle.explode();
       this.tail.explode();
+
+      this.audio.play('square', 600, 100, 0.5);
     }
 
     return true;
