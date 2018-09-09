@@ -8,7 +8,7 @@ export default class {
     utterance.rate = 1.2;
     utterance.pitch = 0.3;
 
-    // speechSynthesis.speak(utterance);
+    speechSynthesis.speak(utterance);
   }
 
   play(type, startFrequency, finalFrequency, duration) {
