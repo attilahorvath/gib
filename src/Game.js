@@ -6,6 +6,7 @@ import TextLayer from './TextLayer';
 import Audio from './Audio';
 import Map from './Map';
 import Title from './Title';
+import Start from './Start';
 import GameOver from './GameOver';
 import Victory from './Victory';
 import Timer from './Timer';
@@ -22,7 +23,7 @@ export default class {
 
     this.load();
 
-    this.title = new Title(this.input, this.textLayer, this.audio);
+    this.title = new Title(this, this.input, this.textLayer, this.audio);
 
     this.lastTimestamp = 0;
     this.timeAccumulator = 0;
@@ -129,6 +130,10 @@ export default class {
     this.spriteSheet.draw();
     this.particleSystem.draw();
     this.textLayer.draw();
+  }
+
+  start() {
+    this.title = new Start(this, this.input, this.textLayer, this.audio);
   }
 
   over() {

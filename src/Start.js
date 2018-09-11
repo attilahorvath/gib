@@ -8,11 +8,11 @@ export default class {
     this.audio = audio;
 
     textLayer.titleText = textLayer.createCenteredSegment(
-      8, 'GIB', 256, TEXT_ANIMATED
+      50, 'SYSTEMS OFFLINE', 64, TEXT_ANIMATED
     );
 
     textLayer.helpText = textLayer.createCenteredSegment(
-      480, 'PRESS START TO BEGIN', 32, TEXT_FLASHING, 600
+      200, 'PRESS X TO DROP', 32, TEXT_FLASHING, 600
     );
 
     this.loaded = false;
@@ -25,6 +25,8 @@ export default class {
     this.timer.update();
 
     if (!this.loaded) {
+      this.audio.speak('SYSTEMS OFFLINE');
+
       this.loaded = true;
     }
 
@@ -32,7 +34,7 @@ export default class {
       this.textLayer.titleText = null;
       this.textLayer.helpText = null;
 
-      this.game.start();
+      this.started = true;
     }
   }
 }

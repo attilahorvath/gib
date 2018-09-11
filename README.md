@@ -1,11 +1,11 @@
-# Systems Offline
+# Gib
 A tiny Metroidvania.
 
 Oh no, Gib’s systems went offline!
 Help him regain his abilities by collecting items to bring them back online.
 But watch out for hazards along the way!
 
-[Launch dev build](https://rawgit.com/attilahorvath/systems-offline/master/index.html)
+[Launch dev build](https://rawgit.com/attilahorvath/gib/master/index.html)
 
 Originally created for the [js13kGames](http://js13kgames.com) competition in
 2018. The theme was 'offline'.

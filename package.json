@@ -1,5 +1,5 @@
 {
-  "name": "systems-offline",
+  "name": "gib",
   "version": "1.0.0",
   "description": "A tiny Metroidvania.",
   "main": "index.js",
@@ -18,12 +18,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/attilahorvath/systems-offline.git"
+    "url": "git+https://github.com/attilahorvath/gib.git"
   },
   "author": "Attila Horváth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/attilahorvath/systems-offline/issues"
+    "url": "https://github.com/attilahorvath/gib/issues"
   },
-  "homepage": "https://github.com/attilahorvath/systems-offline#readme"
+  "homepage": "https://github.com/attilahorvath/gib#readme"
 }

@@ -41,6 +41,10 @@ export default class extends SpriteController {
 
     this.jumps = 0;
 
+    this.movementTimer = new Timer(150, () => {
+      this.audio.play('sawtooth', 250, 300, 0.05);
+    }, true);
+
     this.drillingTimer = new Timer(50, () => {
       this.audio.play('sawtooth', 150, 200, 0.05);
     }, true);
@@ -75,6 +79,8 @@ export default class extends SpriteController {
 
       if (this.y - this.lastPlatform > 250.0) {
         this.renderer.shake();
+
+        this.audio.play('sawtooth', 50, 150, 0.5);
       }
 
       this.lastPlatform = this.y;
@@ -192,6 +198,9 @@ export default class extends SpriteController {
       this.jumps++;
       this.audio.play('sawtooth', 150, 500, 0.3);
     }
+
+    this.movementTimer.enabled = this.direction !== 0.0 && !drilling;
+    this.movementTimer.update();
 
     super.update();
 
