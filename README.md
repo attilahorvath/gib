@@ -10,6 +10,8 @@ But watch out for hazards along the way!
 Originally created for the [js13kGames](http://js13kgames.com) competition in
 2018. The theme was 'offline'.
 
+[Launch compo version](https://cdn.rawgit.com/attilahorvath/gib/final/index.html)
+
 ## Controls (none of them are available at the start)
 - Arrows / WASD / Gamepad analog stick - Move
 - X / K / Gamepad A button - Jump
