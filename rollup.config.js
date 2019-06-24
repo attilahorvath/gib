@@ -1,5 +1,5 @@
 import replace from 'rollup-plugin-replace';
-import string from 'rollup-plugin-string';
+import { string } from 'rollup-plugin-string';
 import glsl from 'rollup-plugin-glsl';
 import { terser } from 'rollup-plugin-terser';
 
