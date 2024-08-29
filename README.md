@@ -5,12 +5,12 @@ Oh no, Gib’s systems went offline!
 Help him regain his abilities by collecting items to bring them back online.
 But watch out for hazards along the way!
 
-[Launch dev build](https://rawgit.com/attilahorvath/gib/master/index.html)
+[Launch dev build](https://attilahorvath.github.io/gib)
 
 Originally created for the [js13kGames](http://js13kgames.com) competition in
 2018. The theme was 'offline'.
 
-[Launch compo version](https://cdn.rawgit.com/attilahorvath/gib/final/index.html)
+[Launch compo version](https://js13kgames.com/games/gib/index.html)
 
 ## Controls (none of them are available at the start)
 - Arrows / WASD / Gamepad analog stick - Move
@@ -44,18 +44,12 @@ $ npm run watch
 ```
 
 Serving the game locally requires a web server, otherwise e.g. Chrome refuses to
-load the images. I was using `local-web-server` for this purpose.
+load the images. I was using `serve` for this purpose.
 
-To install:
-
-```sh
-$ npm install --global local-web-server
-```
-
-Then run:
+To run:
 
 ```sh
-$ ws
+$ npm run start
 ```
 
-The game will then be served at: http://localhost:8000
+The game will then be served at: http://localhost:3000

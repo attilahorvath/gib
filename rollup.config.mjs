@@ -1,13 +1,14 @@
-import replace from 'rollup-plugin-replace';
+import replace from '@rollup/plugin-replace';
 import { string } from 'rollup-plugin-string';
 import glsl from 'rollup-plugin-glsl';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 export default {
   input: 'src/index.js',
   output: {
     file: 'build/index.js',
-    format: 'iife'
+    format: 'iife',
+    sourcemap: true
   },
   plugins: [
     replace({
